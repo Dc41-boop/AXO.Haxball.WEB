@@ -3,151 +3,406 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Stats del Host</title>
+<title>Panel de Estadísticas — FIFA Partidos Haxball</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0f1117;
-    --bg-card: #171a24;
-    --border: #262a38;
-    --text: #e8e9ee;
-    --text-dim: #8a8fa3;
-    --accent: #4dd2ff;
+    --pitch:        #0a0f0a;
+    --pitch-deep:    #070a07;
+    --card:         #131a10;
+    --card-line:    #223018;
+    --gold:         #c9a227;
+    --gold-bright:  #f0d878;
+    --gold-dim:     #7a651e;
+    --cream:        #f3ecd9;
+    --cream-dim:    #a5a08d;
+    --bronze:       #b0703a;
+    --silver:       #c7cdd6;
+    --danger:       #d1483f;
   }
+
   * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
   body {
     margin: 0;
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    padding: 24px;
+    min-height: 100vh;
+    background:
+      radial-gradient(ellipse 900px 500px at 50% -10%, rgba(201,162,39,0.10), transparent),
+      repeating-linear-gradient(180deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 2px, transparent 2px, transparent 42px),
+      var(--pitch);
+    color: var(--cream);
+    font-family: 'Inter', system-ui, sans-serif;
+    padding: 0 20px 60px;
   }
-  h1 {
-    text-align: center;
-    margin-bottom: 4px;
-    font-size: 28px;
+
+  .display {
+    font-family: 'Bebas Neue', 'Inter', sans-serif;
+    letter-spacing: 0.03em;
   }
-  .subtitle {
-    text-align: center;
-    color: var(--text-dim);
-    margin-bottom: 24px;
-    font-size: 14px;
-  }
-  .controls {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 24px;
-  }
-  input, select {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 10px 14px;
-    border-radius: 8px;
-    font-size: 14px;
-  }
-  input:focus, select:focus { outline: 1px solid var(--accent); }
-  table {
-    width: 100%;
-    max-width: 900px;
+
+  header {
+    max-width: 1040px;
     margin: 0 auto;
-    border-collapse: collapse;
-    background: var(--bg-card);
-    border-radius: 12px;
-    overflow: hidden;
-  }
-  th, td {
-    padding: 12px 14px;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-    font-size: 14px;
-  }
-  th {
-    background: #1d2130;
-    color: var(--text-dim);
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 12px;
-    letter-spacing: 0.05em;
-  }
-  tr:hover td { background: #1c2030; }
-  .pos { color: var(--text-dim); width: 30px; }
-  .rango-tag {
-    padding: 2px 8px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 600;
-    display: inline-block;
-  }
-  .loading, .error {
+    padding: 40px 0 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
     text-align: center;
-    color: var(--text-dim);
-    padding: 40px;
   }
-  .error { color: #ff6b6b; }
+
+  .crest {
+    width: 58px;
+    height: 58px;
+    flex-shrink: 0;
+    border-radius: 14px;
+    object-fit: cover;
+    box-shadow: 0 4px 14px -4px rgba(201,162,39,0.5);
+  }
+
+  .brand h1 {
+    margin: 0;
+    font-size: 34px;
+    color: var(--gold-bright);
+    text-shadow: 0 0 24px rgba(201,162,39,0.25);
+    line-height: 1;
+  }
+
+  .brand .eyebrow {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 6px;
+  }
+
+  hr.rule {
+    max-width: 1040px;
+    margin: 0 auto;
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--card-line) 20%, var(--card-line) 80%, transparent);
+  }
+
+  .lider-wrap { max-width: 1040px; margin: 36px auto 0; }
+
+  .lider-eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--cream-dim);
+    margin: 0 0 14px 4px;
+  }
+
+  .lider-card {
+    position: relative;
+    border-radius: 18px;
+    padding: 2px;
+    background: linear-gradient(135deg, var(--gold-bright), var(--gold) 40%, var(--gold-dim) 70%, var(--gold) 100%);
+    box-shadow: 0 20px 50px -20px rgba(201,162,39,0.35);
+  }
+
+  .lider-card-inner {
+    border-radius: 16px;
+    background:
+      radial-gradient(ellipse 500px 260px at 15% 0%, rgba(240,216,120,0.12), transparent 60%),
+      var(--card);
+    padding: 30px 34px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .lider-nivel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.08), transparent 60%), var(--pitch-deep);
+    border: 2px solid var(--gold);
+    flex-shrink: 0;
+  }
+  .lider-nivel .n { font-family:'Bebas Neue'; font-size: 34px; color: var(--gold-bright); line-height: 1; }
+  .lider-nivel .lbl { font-size: 9px; letter-spacing: 0.14em; color: var(--cream-dim); text-transform: uppercase; margin-top: 2px; }
+
+  .lider-info .rango-line {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+  .lider-info h2 {
+    margin: 0 0 12px;
+    font-size: 32px;
+    font-family: 'Bebas Neue';
+    color: var(--cream);
+    letter-spacing: 0.02em;
+  }
+
+  .lider-stats { display: flex; gap: 26px; }
+  .lider-stats .stat { text-align: left; }
+  .lider-stats .stat .v { font-family: 'Bebas Neue'; font-size: 24px; color: var(--gold-bright); line-height: 1; }
+  .lider-stats .stat .k { font-size: 10px; color: var(--cream-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 3px; }
+
+  .lider-puntaje {
+    text-align: right;
+    padding-left: 20px;
+    border-left: 1px solid var(--card-line);
+  }
+  .lider-puntaje .v { font-family: 'Bebas Neue'; font-size: 40px; color: var(--gold-bright); line-height: 1; }
+  .lider-puntaje .k { font-size: 10px; color: var(--cream-dim); text-transform: uppercase; letter-spacing: 0.12em; margin-top: 4px; }
+
+  .panel { max-width: 1040px; margin: 34px auto 0; }
+
+  .panel-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .panel-head h3 {
+    margin: 0;
+    font-family: 'Bebas Neue';
+    font-size: 22px;
+    letter-spacing: 0.04em;
+    color: var(--cream);
+  }
+  .panel-head h3 span { color: var(--gold); }
+
+  .controls { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  input, select {
+    background: var(--card);
+    border: 1px solid var(--card-line);
+    color: var(--cream);
+    padding: 9px 13px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+  }
+  input::placeholder { color: var(--cream-dim); }
+  input:focus, select:focus { outline: 2px solid var(--gold-dim); outline-offset: 1px; }
+  select { cursor: pointer; }
+
+  .tabla-wrap {
+    border-radius: 14px;
+    border: 1px solid var(--card-line);
+    background: var(--card);
+    overflow: hidden;
+    overflow-x: auto;
+  }
+
+  table { width: 100%; border-collapse: collapse; }
+
+  th, td {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 13.5px;
+    border-bottom: 1px solid var(--card-line);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  th {
+    background: var(--pitch-deep);
+    color: var(--cream-dim);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+  }
+
+  tbody tr { transition: background 0.12s ease; }
+  tbody tr:hover td { background: rgba(201,162,39,0.05); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  .pos { width: 34px; font-family: 'Bebas Neue'; font-size: 16px; color: var(--cream-dim); }
+  tr.top1 .pos { color: var(--gold-bright); }
+  tr.top2 .pos { color: var(--silver); }
+  tr.top3 .pos { color: var(--bronze); }
+
+  .nombre-cell { display: flex; align-items: center; gap: 8px; }
+  .medalla { font-size: 13px; }
+
+  .rango-tag {
+    padding: 3px 9px;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    display: inline-block;
+    border: 1px solid transparent;
+  }
+
+  .estado, .error { text-align: center; color: var(--cream-dim); padding: 50px 20px; font-size: 14px; }
+  .error { color: var(--danger); }
+
+  footer {
+    max-width: 1040px;
+    margin: 40px auto 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 18px;
+    border-top: 1px solid var(--card-line);
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  footer .actualizado { font-size: 11px; color: var(--cream-dim); }
+  .marca-agua { font-size: 11px; color: var(--gold-dim); letter-spacing: 0.05em; }
+
+  @media (max-width: 640px) {
+    .lider-card-inner { grid-template-columns: 1fr; text-align: center; gap: 16px; }
+    .lider-stats { justify-content: center; }
+    .lider-puntaje { border-left: none; border-top: 1px solid var(--card-line); padding-left: 0; padding-top: 14px; text-align: center; }
+    .panel-head { flex-direction: column; align-items: flex-start; }
+    th, td { padding: 10px 10px; font-size: 12.5px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    tbody tr { transition: none; }
+  }
 </style>
 </head>
 <body>
 
-  <h1>📊 Stats del Host</h1>
-  <p class="subtitle">Estadísticas en vivo, actualizadas automáticamente</p>
+  <header>
+    <img class="crest" src="fifo.png" alt="Logo de la comunidad" />
+    <div class="brand">
+      <span class="eyebrow">Comunidad Haxball</span>
+      <h1 class="display">FIFA PARTIDOS HAXBALL</h1>
+    </div>
+  </header>
 
-  <div class="controls">
-    <input type="text" id="buscador" placeholder="Buscar jugador..." />
-    <select id="orden">
-      <option value="puntaje">Ordenar por Puntaje</option>
-      <option value="goles">Ordenar por Goles</option>
-      <option value="asistencias">Ordenar por Asistencias</option>
-      <option value="atajadas">Ordenar por Tapadas</option>
-      <option value="nivel">Ordenar por Nivel</option>
-      <option value="ganados">Ordenar por Partidos Ganados</option>
-    </select>
+  <hr class="rule" />
+
+  <div class="lider-wrap">
+    <p class="lider-eyebrow">Puntero de la tabla</p>
+    <div id="liderCard"></div>
   </div>
 
-  <div id="contenido">
-    <p class="loading">Cargando estadísticas...</p>
+  <div class="panel">
+    <div class="panel-head">
+      <h3>Tabla de <span>posiciones</span></h3>
+      <div class="controls">
+        <input type="text" id="buscador" placeholder="Buscar jugador…" />
+        <select id="orden">
+          <option value="puntaje">Puntaje</option>
+          <option value="goles">Goles</option>
+          <option value="asistencias">Asistencias</option>
+          <option value="atajadas">Tapadas</option>
+          <option value="nivel">Nivel</option>
+          <option value="ganados">Partidos ganados</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="tabla-wrap">
+      <div id="contenido">
+        <p class="estado">Cargando estadísticas…</p>
+      </div>
+    </div>
   </div>
+
+  <footer>
+    <span class="actualizado" id="actualizado"></span>
+    <span class="marca-agua">Creado por PastaBase</span>
+  </footer>
 
   <script>
-    // 👇 Cambiá esto por la URL real de tu API una vez desplegada en Render
     const API_URL = "https://haxball-stats-api-ft5y.onrender.com";
-
     let jugadores = [];
 
     async function cargarDatos(orden = "puntaje") {
       const contenido = document.getElementById("contenido");
-      contenido.innerHTML = '<p class="loading">Cargando estadísticas...</p>';
+      contenido.innerHTML = '<p class="estado">Cargando estadísticas…</p>';
       try {
         const res = await fetch(`${API_URL}/api/players?sort=${orden}&limit=100`);
         if (!res.ok) throw new Error("Respuesta no OK");
         jugadores = await res.json();
+        renderizarLider(jugadores[0]);
         renderizarTabla(jugadores);
+        document.getElementById("actualizado").textContent =
+          "Actualizado " + new Date().toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" });
       } catch (err) {
-        contenido.innerHTML = `<p class="error">No se pudo cargar la información. Puede que el servidor esté "despertando" (tarda ~30s la primera vez) — probá de nuevo en un momento.</p>`;
+        contenido.innerHTML = '<p class="error">No se pudo cargar la información. El servidor puede estar "despertando" — probá de nuevo en unos segundos.</p>';
         console.error(err);
       }
+    }
+
+    function renderizarLider(j) {
+      const card = document.getElementById("liderCard");
+      if (!j) { card.innerHTML = ""; return; }
+      card.innerHTML = `
+        <div class="lider-card">
+          <div class="lider-card-inner">
+            <div class="lider-nivel">
+              <span class="n">${j.nivel}</span>
+              <span class="lbl">Nivel</span>
+            </div>
+            <div class="lider-info">
+              <p class="rango-line">${escapeHtml(j.rango)}</p>
+              <h2>${escapeHtml(j.name)}</h2>
+              <div class="lider-stats">
+                <div class="stat"><div class="v">${j.goles}</div><div class="k">Goles</div></div>
+                <div class="stat"><div class="v">${j.asistencias}</div><div class="k">Asist.</div></div>
+                <div class="stat"><div class="v">${j.atajadas}</div><div class="k">Tapadas</div></div>
+                <div class="stat"><div class="v">${j.ganados}/${j.partidos}</div><div class="k">PG / PJ</div></div>
+              </div>
+            </div>
+            <div class="lider-puntaje">
+              <div class="v">${j.puntaje}</div>
+              <div class="k">Puntos</div>
+            </div>
+          </div>
+        </div>
+      `;
     }
 
     function renderizarTabla(lista) {
       const contenido = document.getElementById("contenido");
       if (!lista.length) {
-        contenido.innerHTML = '<p class="loading">No hay jugadores registrados todavía.</p>';
+        contenido.innerHTML = '<p class="estado">Todavía no hay jugadores registrados.</p>';
         return;
       }
 
-      let filas = lista.map((j, i) => `
-        <tr>
-          <td class="pos">${i + 1}</td>
-          <td><strong>${escapeHtml(j.name)}</strong></td>
-          <td><span class="rango-tag" style="background:${j.rangoColor || '#2a2e3d'}; color:${j.rangoColor ? '#111' : '#cfd2dd'}">${escapeHtml(j.rango)} (${j.nivel})</span></td>
-          <td>${j.puntaje}</td>
-          <td>${j.goles}</td>
-          <td>${j.asistencias}</td>
-          <td>${j.atajadas}</td>
-          <td>${j.ganados}/${j.partidos}</td>
-        </tr>
-      `).join("");
+      const medallas = ["🥇", "🥈", "🥉"];
+      let filas = lista.map((j, i) => {
+        const claseFila = i === 0 ? "top1" : i === 1 ? "top2" : i === 2 ? "top3" : "";
+        const medalla = i < 3 ? `<span class="medalla">${medallas[i]}</span>` : "";
+        const colorRango = j.rangoColor || "#232d1c";
+        const colorTexto = j.rangoColor ? "#0a0f0a" : "#c9cabb";
+        return `
+          <tr class="${claseFila}">
+            <td class="pos">${i + 1}</td>
+            <td><div class="nombre-cell">${medalla}<strong>${escapeHtml(j.name)}</strong></div></td>
+            <td><span class="rango-tag" style="background:${colorRango}; color:${colorTexto}">${escapeHtml(j.rango)}</span></td>
+            <td>${j.nivel}</td>
+            <td>${j.puntaje}</td>
+            <td>${j.goles}</td>
+            <td>${j.asistencias}</td>
+            <td>${j.atajadas}</td>
+            <td>${j.ganados}/${j.partidos}</td>
+          </tr>
+        `;
+      }).join("");
 
       contenido.innerHTML = `
         <table>
@@ -156,6 +411,7 @@
               <th>#</th>
               <th>Jugador</th>
               <th>Rango</th>
+              <th>Nivel</th>
               <th>Puntos</th>
               <th>Goles</th>
               <th>Asist.</th>
@@ -170,13 +426,11 @@
 
     function escapeHtml(str) {
       const div = document.createElement("div");
-      div.textContent = str;
+      div.textContent = str ?? "";
       return div.innerHTML;
     }
 
-    document.getElementById("orden").addEventListener("change", (e) => {
-      cargarDatos(e.target.value);
-    });
+    document.getElementById("orden").addEventListener("change", (e) => cargarDatos(e.target.value));
 
     document.getElementById("buscador").addEventListener("input", (e) => {
       const texto = e.target.value.toLowerCase();
@@ -185,9 +439,11 @@
     });
 
     cargarDatos();
-    // Refresca automáticamente cada 30 segundos
     setInterval(() => cargarDatos(document.getElementById("orden").value), 30000);
   </script>
+
+</body>
+</html>
 
 </body>
 </html>
