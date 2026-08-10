@@ -348,6 +348,9 @@
     let jugadores = [];
     let posicionesAnteriores = {};
     let partidosCache = [];
+    let tiempoPartidoBase = 0;      // último "tiempoPartido" (segundos) que mandó el bot
+    let tiempoPartidoRecibidoEn = 0; // Date.now() de cuándo llegó ese dato
+    let cronometroInterval = null;   // el reloj local que corre cada 1 segundo
 
     function getBadgeTier(nivel) {
       if (nivel >= 76) return { tier: "diamante", c1: "#b6faff", c2: "#4dd2ff", label: "Diamante" };
@@ -475,11 +478,15 @@
           scoreboardWrap.dataset.activo = "1";
           scoreboardWrap.style.display = "block";
           liderWrap.style.display = "none";
+          tiempoPartidoBase = estado.tiempoPartido || 0;
+          tiempoPartidoRecibidoEn = Date.now();
           renderizarScoreboard(estado);
+          iniciarCronometroLocal();
         } else {
           delete scoreboardWrap.dataset.activo;
           scoreboardWrap.style.display = "none";
           liderWrap.style.display = "block";
+          detenerCronometroLocal();
           if (jugadores.length) renderizarLider(jugadores[0]);
         }
       } catch (err) {
@@ -490,9 +497,6 @@
 
     function renderizarScoreboard(estado) {
       const wrap = document.getElementById("scoreboardWrap");
-      const mins = Math.floor((estado.tiempoPartido || 0) / 60);
-      const segs = Math.floor((estado.tiempoPartido || 0) % 60);
-      const tiempoTexto = `${String(mins).padStart(2, "0")}:${String(segs).padStart(2, "0")}`;
       wrap.innerHTML = `
         <div class="scoreboard">
           <div class="scoreboard-inner">
@@ -502,10 +506,40 @@
               <span>${estado.scoreRed}</span><span class="vs">—</span><span>${estado.scoreBlue}</span>
             </div>
             <div class="score-team azul">🔵 AZUL</div>
-            <div class="score-timer">⏱ ${tiempoTexto}</div>
+            <div class="score-timer">⏱ <span id="scoreTimerValue">00:00</span></div>
           </div>
         </div>
       `;
+      actualizarTextoCronometro();
+    }
+
+    // Formatea segundos -> "mm:ss"
+    function formatearTiempo(totalSegundos) {
+      const mins = Math.floor(totalSegundos / 60);
+      const segs = Math.floor(totalSegundos % 60);
+      return `${String(mins).padStart(2, "0")}:${String(segs).padStart(2, "0")}`;
+    }
+
+    // Calcula el tiempo actual sumando lo que pasó desde el último dato real del bot
+    function actualizarTextoCronometro() {
+      const span = document.getElementById("scoreTimerValue");
+      if (!span) return;
+      const segundosTranscurridos = (Date.now() - tiempoPartidoRecibidoEn) / 1000;
+      const tiempoActual = tiempoPartidoBase + segundosTranscurridos;
+      span.textContent = formatearTiempo(tiempoActual);
+    }
+
+    // El cronómetro local: corre cada 1 segundo en el navegador, independiente de la API
+    function iniciarCronometroLocal() {
+      if (cronometroInterval) return; // ya está corriendo, no duplicar
+      cronometroInterval = setInterval(actualizarTextoCronometro, 1000);
+    }
+
+    function detenerCronometroLocal() {
+      if (cronometroInterval) {
+        clearInterval(cronometroInterval);
+        cronometroInterval = null;
+      }
     }
 
     function formatearFecha(fechaISO) {
