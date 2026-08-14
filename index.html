@@ -53,7 +53,7 @@
   }
   .sidebar.colapsado { width: 72px; }
   .sidebar-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
-  .sidebar-logo { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(155,63,224,0.4); flex-shrink: 0; }
+  .sidebar-logo { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(155,63,224,0.5); flex-shrink: 0; }
   .sidebar-toggle {
     width: 32px; height: 32px; border-radius: 8px; background: var(--pitch-deep);
     border: 1px solid var(--card-line); color: var(--cream-dim); cursor: pointer;
@@ -66,7 +66,7 @@
     color: var(--cream-dim); text-decoration: none; font-size: 13.5px; font-weight: 600;
     cursor: pointer; white-space: nowrap; overflow: hidden; border: 1px solid transparent;
   }
-  .sidebar-item .icono-nav { font-size: 16px; width: 20px; text-align: center; flex-shrink: 0; }
+  .sidebar-item .icono-nav { width: 19px; height: 19px; flex-shrink: 0; }
   .sidebar-item:hover { background: rgba(155,63,224,0.08); color: var(--cream); }
   .sidebar-item.activo { background: var(--gold); color: #0a0612; font-weight: 700; }
   .sidebar-item.activo:hover { background: var(--gold); color: #0a0612; }
@@ -101,7 +101,7 @@
     display: flex; align-items: center; justify-content: center; gap: 16px;
     text-align: center; position: relative; flex-wrap: wrap;
   }
-  .crest { width: 58px; height: 58px; flex-shrink: 0; border-radius: 50%; object-fit: cover; box-shadow: 0 4px 14px -4px rgba(155,63,224,0.5); border: 1px solid rgba(155,63,224,0.35); }
+  .crest { width: 78px; height: 78px; flex-shrink: 0; border-radius: 50%; object-fit: cover; box-shadow: 0 6px 20px -4px rgba(155,63,224,0.55); border: 2px solid rgba(155,63,224,0.4); }
   .brand h1 { margin: 0; font-size: 32px; color: var(--gold-bright); text-shadow: 0 0 24px rgba(155,63,224,0.25); line-height: 1; }
   .brand .eyebrow { display: block; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 6px; }
 
@@ -185,6 +185,8 @@
   .lider-puntaje .k { font-size: 10px; color: var(--cream-dim); text-transform: uppercase; letter-spacing: 0.12em; margin-top: 4px; }
 
   .panel { max-width: 1040px; margin: 34px auto 0; }
+  .vista { display: none; }
+  .vista.vista-activa { display: block; }
   .panel-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
   .panel-head h3 { margin: 0; font-family: 'Bebas Neue'; font-size: 21px; letter-spacing: 0.04em; color: var(--cream); }
   .panel-head h3 span { color: var(--gold); }
@@ -326,17 +328,21 @@
       <button class="sidebar-toggle" id="sidebarToggle" aria-label="Colapsar menú">☰</button>
     </div>
     <nav class="sidebar-nav">
-      <a class="sidebar-item activo" data-target="inicio" onclick="irASeccion(event, 'inicio', this)">
-        <span class="icono-nav">🏠</span><span class="label-nav">Inicio</span>
+      <a class="sidebar-item activo" data-vista="inicio" onclick="irAVista(event, 'inicio', this)">
+        <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9a1 1 0 0 0 1 1H9a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h2.5a1 1 0 0 0 1-1v-9"/></svg>
+        <span class="label-nav">Inicio</span>
       </a>
-      <a class="sidebar-item" data-target="seccion-partidos" onclick="irASeccion(event, 'seccion-partidos', this)">
-        <span class="icono-nav">⚽</span><span class="label-nav">Partidos</span>
+      <a class="sidebar-item" data-vista="partidos" onclick="irAVista(event, 'partidos', this)">
+        <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7l3.5 2.5-1.3 4.2H9.8L8.5 9.5 12 7Z"/><path d="M12 3v4M12 17v4M3.5 9l3.5.5M17 9.5l3.5-.5M6 18l2.8-3M18 18l-2.8-3"/></svg>
+        <span class="label-nav">Partidos</span>
       </a>
-      <a class="sidebar-item" data-target="seccion-ranking" onclick="irASeccion(event, 'seccion-ranking', this)">
-        <span class="icono-nav">🏆</span><span class="label-nav">Ranking</span>
+      <a class="sidebar-item" data-vista="ranking" onclick="irAVista(event, 'ranking', this)">
+        <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4Z"/><path d="M7 5H4v2a3 3 0 0 0 3 3M17 5h3v2a3 3 0 0 1-3 3"/></svg>
+        <span class="label-nav">Ranking</span>
       </a>
       <a class="sidebar-item proximamente" onclick="mostrarProximamente(event)">
-        <span class="icono-nav">🎰</span><span class="label-nav">Casino</span><span class="badge-pronto">PRONTO</span>
+        <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8" cy="10" r="1"/><circle cx="16" cy="14" r="1"/><path d="M14 8l-4 8"/></svg>
+        <span class="label-nav">Casino</span><span class="badge-pronto">PRONTO</span>
       </a>
     </nav>
   </aside>
@@ -364,13 +370,15 @@
     <span id="liveTexto">Consultando estado del host…</span>
   </div>
 
-  <div class="scoreboard-wrap" id="scoreboardWrap" style="display:none;"></div>
-  <div class="lider-wrap" id="liderWrap">
-    <p class="lider-eyebrow">Puntero de la tabla</p>
-    <div id="liderCard"></div>
+  <div id="vista-inicio" class="vista vista-activa">
+    <div class="scoreboard-wrap" id="scoreboardWrap" style="display:none;"></div>
+    <div class="lider-wrap" id="liderWrap">
+      <p class="lider-eyebrow">Puntero de la tabla</p>
+      <div id="liderCard"></div>
+    </div>
   </div>
 
-  <div class="panel" id="seccion-partidos">
+  <div class="panel vista" id="seccion-partidos">
     <div class="panel-head">
       <h3>Últimos <span>partidos</span></h3>
       <span class="sub">Click en un partido para ver los goles</span>
@@ -380,7 +388,7 @@
     </div>
   </div>
 
-  <div class="panel" id="seccion-ranking">
+  <div class="panel vista" id="seccion-ranking">
     <div class="panel-head">
       <h3>Tabla de <span>posiciones</span></h3>
       <div class="controls">
@@ -854,13 +862,17 @@
     setInterval(cargarPartidos, 60000);
 
     // ===== Sidebar =====
-    function irASeccion(evento, idDestino, elemento) {
+    function irAVista(evento, nombreVista, elemento) {
       evento.preventDefault();
       document.querySelectorAll(".sidebar-item").forEach(el => el.classList.remove("activo"));
       elemento.classList.add("activo");
 
-      const destino = document.getElementById(idDestino);
-      if (destino) destino.scrollIntoView({ behavior: "smooth", block: "start" });
+      document.querySelectorAll(".vista").forEach(el => el.classList.remove("vista-activa"));
+      const idVista = nombreVista === "inicio" ? "vista-inicio" : `seccion-${nombreVista}`;
+      const destino = document.getElementById(idVista);
+      if (destino) destino.classList.add("vista-activa");
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
 
       // en mobile, cerrar el menú después de elegir una sección
       document.getElementById("sidebar").classList.remove("abierto");
