@@ -185,14 +185,21 @@
   .lider-puntaje .k { font-size: 10px; color: var(--cream-dim); text-transform: uppercase; letter-spacing: 0.12em; margin-top: 4px; }
 
   /* ===== Resumen rápido del club ===== */
-  .resumen-club { max-width: 1040px; margin: 26px auto 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  .resumen-item {
-    border: 1px solid var(--card-line); border-radius: 12px; padding: 14px 16px;
-    display: flex; align-items: baseline; gap: 10px; background: rgba(255,255,255,0.012);
+  .resumen-club {
+    max-width: 1040px; margin: 26px auto 0; display: flex;
+    border: 1px solid var(--card-line); border-radius: 14px; overflow: hidden;
+    background: rgba(255,255,255,0.012);
   }
-  .resumen-item .v { font-family: 'Bebas Neue'; font-size: 26px; color: var(--cream); letter-spacing: 0.02em; }
-  .resumen-item .k { font-size: 10.5px; color: var(--cream-dim); text-transform: uppercase; letter-spacing: 0.08em; }
-  @media (max-width: 640px) { .resumen-club { grid-template-columns: 1fr; } }
+  .resumen-item { flex: 1; display: flex; align-items: center; gap: 12px; padding: 15px 20px; }
+  .resumen-item + .resumen-item { border-left: 1px solid var(--card-line); }
+  .resumen-item .icono { font-size: 19px; line-height: 1; flex-shrink: 0; opacity: 0.9; }
+  .resumen-item .txt { display: flex; flex-direction: column; }
+  .resumen-item .v { font-family: 'Bebas Neue'; font-size: 24px; color: var(--cream); line-height: 1; }
+  .resumen-item .k { font-size: 9.5px; color: var(--cream-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 3px; }
+  @media (max-width: 640px) {
+    .resumen-club { flex-direction: column; }
+    .resumen-item + .resumen-item { border-left: none; border-top: 1px solid var(--card-line); }
+  }
 
   /* ===== Cabecera "puntero" + link ranking ===== */
   .lider-eyebrow-row { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 0 4px 14px; }
@@ -200,26 +207,46 @@
   .link-ranking { font-size: 11.5px; font-weight: 700; color: var(--gold-dim); text-decoration: none; letter-spacing: 0.03em; white-space: nowrap; }
   .link-ranking:hover { color: var(--gold-bright); }
 
-  /* ===== Top 2 / Top 3 (segundo y tercer puesto) ===== */
-  .top-secundario { margin-top: 10px; border: 1px solid var(--card-line); border-radius: 14px; overflow: hidden; }
-  .top-fila {
-    display: flex; align-items: center; gap: 14px; padding: 12px 20px; cursor: pointer;
-    border-left: 3px solid transparent; background: var(--card);
+  /* ===== Podio (top 3) ===== */
+  .podio { display: grid; grid-template-columns: 1fr 1.12fr 1fr; align-items: end; gap: 12px; }
+  .podio-col { display: flex; flex-direction: column; }
+  .podio-trofeo { text-align: center; font-size: 24px; margin-bottom: 6px; }
+  .podio-tarjeta {
+    background: var(--card); border: 1px solid var(--card-line); border-radius: 12px 12px 0 0;
+    padding: 16px 10px 14px; text-align: center; cursor: pointer; position: relative; z-index: 2;
   }
-  .top-fila + .top-fila { border-top: 1px solid var(--card-line); }
-  .top-fila:hover { background: rgba(255,255,255,0.025); }
-  .top-fila .puesto { font-family: 'Bebas Neue'; font-size: 19px; width: 20px; text-align: center; color: var(--cream-dim); flex-shrink: 0; }
-  .top-fila.plata { border-left-color: var(--silver); }
-  .top-fila.plata .puesto { color: var(--silver); }
-  .top-fila.bronce { border-left-color: var(--bronze); }
-  .top-fila.bronce .puesto { color: var(--bronze); }
-  .top-fila .nombre { font-size: 14px; font-weight: 700; color: var(--cream); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .top-fila .mini-stats { display: flex; gap: 16px; flex-shrink: 0; }
-  .top-fila .mini-stats .stat { text-align: right; }
-  .top-fila .mini-stats .v { font-size: 13px; font-weight: 700; color: var(--cream); }
-  .top-fila .mini-stats .k { font-size: 9px; color: var(--cream-dim); text-transform: uppercase; letter-spacing: 0.06em; }
-  .top-fila .pts { font-family: 'Bebas Neue'; font-size: 22px; color: var(--gold-bright); min-width: 44px; text-align: right; flex-shrink: 0; }
-  @media (max-width: 640px) { .top-fila .mini-stats { display: none; } }
+  .podio-col.p1 .podio-tarjeta { border-color: var(--gold); box-shadow: 0 0 34px -10px rgba(155,63,224,0.45); padding-top: 18px; }
+  .podio-col.p2 .podio-tarjeta { border-color: var(--silver); }
+  .podio-col.p3 .podio-tarjeta { border-color: var(--bronze); }
+  .podio-tarjeta:hover { background: #1c1330; }
+  .podio-avatar {
+    width: 40px; height: 40px; border-radius: 50%; margin: 0 auto 8px; display: flex;
+    align-items: center; justify-content: center; font-family: 'Bebas Neue'; font-size: 16px;
+    background: var(--pitch-deep); border: 2px solid var(--card-line); color: var(--cream-dim);
+  }
+  .podio-col.p1 .podio-avatar { width: 48px; height: 48px; font-size: 18px; border-color: var(--gold); color: var(--gold-bright); }
+  .podio-col.p2 .podio-avatar { border-color: var(--silver); color: var(--silver); }
+  .podio-col.p3 .podio-avatar { border-color: var(--bronze); color: var(--bronze); }
+  .podio-tarjeta .nombre { font-size: 13px; font-weight: 700; color: var(--cream); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .podio-col.p1 .podio-tarjeta .nombre { font-size: 14.5px; }
+  .podio-tarjeta .pts { font-family: 'Bebas Neue'; font-size: 24px; color: var(--gold-bright); margin-top: 3px; line-height: 1; }
+  .podio-col.p1 .podio-tarjeta .pts { font-size: 30px; }
+  .podio-tarjeta .mini { font-size: 10px; color: var(--cream-dim); margin-top: 5px; }
+  .podio-tarjeta .mini b { color: var(--cream); font-weight: 700; }
+  .podio-base {
+    display: flex; align-items: flex-start; justify-content: center; padding-top: 8px;
+    border-radius: 0 0 10px 10px; font-family: 'Bebas Neue'; font-size: 26px; position: relative; z-index: 1;
+  }
+  .podio-base.oro { height: 58px; background: linear-gradient(180deg, var(--gold-bright), var(--gold)); color: #2b1140; }
+  .podio-base.plata { height: 40px; background: linear-gradient(180deg, #eef1f5, var(--silver)); color: #262b32; }
+  .podio-base.bronce { height: 28px; background: linear-gradient(180deg, #dd9a5c, var(--bronze)); color: #2c1608; }
+  @media (max-width: 640px) {
+    .podio { gap: 8px; }
+    .podio-tarjeta { padding: 12px 6px 10px; }
+    .podio-tarjeta .mini { display: none; }
+    .podio-tarjeta .pts { font-size: 19px; }
+    .podio-col.p1 .podio-tarjeta .pts { font-size: 24px; }
+  }
 
   /* ===== Último partido jugado ===== */
   .ultimo-partido-wrap { max-width: 1040px; margin: 30px auto 0; }
@@ -432,8 +459,7 @@
         <p class="lider-eyebrow">Puntero de la tabla</p>
         <a href="#" class="link-ranking" onclick="irAVista(event, 'ranking', document.querySelector('.sidebar-item[data-vista=ranking]'))">Ver ranking completo →</a>
       </div>
-      <div id="liderCard"></div>
-      <div id="topSecundario"></div>
+      <div id="podio"></div>
     </div>
 
     <div class="ultimo-partido-wrap" id="ultimoPartidoWrap"></div>
@@ -539,7 +565,7 @@
         if (!res.ok) throw new Error("Respuesta no OK");
         jugadores = await res.json();
         if (!document.getElementById("scoreboardWrap").dataset.activo) {
-          renderizarLider(jugadores[0]);
+          renderizarPodio(jugadores.slice(0, 3));
         }
         renderizarResumenClub();
         renderizarTabla(jugadores, true);
@@ -638,7 +664,7 @@
           scoreboardWrap.style.display = "none";
           liderWrap.style.display = "block";
           detenerCronometroLocal();
-          if (jugadores.length) renderizarLider(jugadores[0]);
+          if (jugadores.length) renderizarPodio(jugadores.slice(0, 3));
         }
       } catch (err) {
         dot.classList.add("off");
@@ -700,47 +726,34 @@
              d.toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" });
     }
 
-    function renderizarLider(j) {
-      const card = document.getElementById("liderCard");
-      if (!j) { card.innerHTML = ""; document.getElementById("topSecundario").innerHTML = ""; return; }
-      card.innerHTML = `
-        <div class="lider-card" onclick="abrirFicha('${encodeURIComponent(j.name)}')">
-          <div class="lider-card-inner">
-            <div class="lider-nivel"><span class="n">${j.nivel}</span><span class="lbl">Nivel</span></div>
-            <div class="lider-info">
-              <p class="rango-line">${escapeHtml(j.rango)}</p>
-              <h2>${escapeHtml(j.name)}</h2>
-              <div class="lider-stats">
-                <div class="stat"><div class="v">${j.goles}</div><div class="k">Goles</div></div>
-                <div class="stat"><div class="v">${j.asistencias}</div><div class="k">Asist.</div></div>
-                <div class="stat"><div class="v">${j.atajadas}</div><div class="k">Tapadas</div></div>
-                <div class="stat"><div class="v">${j.ganados}/${j.partidos}</div><div class="k">PG / PJ</div></div>
-              </div>
-            </div>
-            <div class="lider-puntaje"><div class="v">${j.puntaje}</div><div class="k">Puntos</div></div>
-          </div>
-        </div>
-      `;
-      renderizarTopSecundario(jugadores.slice(1, 3));
-    }
+    function renderizarPodio(top3) {
+      const cont = document.getElementById("podio");
+      if (!top3 || !top3.length) { cont.innerHTML = ""; return; }
+      const primero = top3[0];
+      const segundo = top3[1];
+      const tercero = top3[2];
 
-    function renderizarTopSecundario(top) {
-      const cont = document.getElementById("topSecundario");
-      if (!top || !top.length) { cont.innerHTML = ""; return; }
-      const clases = ["plata", "bronce"];
+      const tarjeta = (j, puesto) => {
+        if (!j) return `<div class="podio-tarjeta"></div><div class="podio-base ${puesto === 1 ? "oro" : puesto === 2 ? "plata" : "bronce"}"></div>`;
+        return `
+          <div class="podio-tarjeta" onclick="abrirFicha('${encodeURIComponent(j.name)}')">
+            <div class="podio-avatar">${j.nivel}</div>
+            <div class="nombre">${escapeHtml(j.name)}</div>
+            <div class="pts">${j.puntaje}</div>
+            <div class="mini"><b>${j.goles}</b> goles · <b>${j.asistencias}</b> asist.</div>
+          </div>
+          <div class="podio-base ${puesto === 1 ? "oro" : puesto === 2 ? "plata" : "bronce"}">${puesto}</div>
+        `;
+      };
+
       cont.innerHTML = `
-        <div class="top-secundario">
-          ${top.map((j, i) => `
-            <div class="top-fila ${clases[i] || ""}" onclick="abrirFicha('${encodeURIComponent(j.name)}')">
-              <span class="puesto">${i + 2}</span>
-              <span class="nombre">${escapeHtml(j.name)}</span>
-              <span class="mini-stats">
-                <span class="stat"><span class="v">${j.goles}</span><span class="k">Goles</span></span>
-                <span class="stat"><span class="v">${j.asistencias}</span><span class="k">Asist.</span></span>
-              </span>
-              <span class="pts">${j.puntaje}</span>
-            </div>
-          `).join("")}
+        <div class="podio">
+          <div class="podio-col p2">${tarjeta(segundo, 2)}</div>
+          <div class="podio-col p1">
+            <div class="podio-trofeo">🏆</div>
+            ${tarjeta(primero, 1)}
+          </div>
+          <div class="podio-col p3">${tarjeta(tercero, 3)}</div>
         </div>
       `;
     }
@@ -750,9 +763,9 @@
       if (!jugadores.length) { cont.innerHTML = ""; return; }
       const totalGoles = jugadores.reduce((acc, j) => acc + (Number(j.goles) || 0), 0);
       cont.innerHTML = `
-        <div class="resumen-item"><span class="v">${jugadores.length}</span><span class="k">Jugadores</span></div>
-        <div class="resumen-item"><span class="v">${totalGoles}</span><span class="k">Goles totales</span></div>
-        <div class="resumen-item"><span class="v">${partidosCache.length}</span><span class="k">Partidos registrados</span></div>
+        <div class="resumen-item"><span class="icono">👥</span><span class="txt"><span class="v">${jugadores.length}</span><span class="k">Jugadores</span></span></div>
+        <div class="resumen-item"><span class="icono">⚽</span><span class="txt"><span class="v">${totalGoles}</span><span class="k">Goles totales</span></span></div>
+        <div class="resumen-item"><span class="icono">🏟️</span><span class="txt"><span class="v">${partidosCache.length}</span><span class="k">Partidos registrados</span></span></div>
       `;
     }
 
