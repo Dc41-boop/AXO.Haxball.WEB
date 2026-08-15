@@ -184,23 +184,6 @@
   .lider-puntaje .v { font-family: 'Bebas Neue'; font-size: 38px; color: var(--gold-bright); line-height: 1; }
   .lider-puntaje .k { font-size: 10px; color: var(--cream-dim); text-transform: uppercase; letter-spacing: 0.12em; margin-top: 4px; }
 
-  /* ===== Resumen rápido del club ===== */
-  .resumen-club {
-    max-width: 1040px; margin: 26px auto 0; display: flex;
-    border: 1px solid var(--card-line); border-radius: 14px; overflow: hidden;
-    background: rgba(255,255,255,0.012);
-  }
-  .resumen-item { flex: 1; display: flex; align-items: center; gap: 12px; padding: 15px 20px; }
-  .resumen-item + .resumen-item { border-left: 1px solid var(--card-line); }
-  .resumen-item .icono { font-size: 19px; line-height: 1; flex-shrink: 0; opacity: 0.9; }
-  .resumen-item .txt { display: flex; flex-direction: column; }
-  .resumen-item .v { font-family: 'Bebas Neue'; font-size: 24px; color: var(--cream); line-height: 1; }
-  .resumen-item .k { font-size: 9.5px; color: var(--cream-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 3px; }
-  @media (max-width: 640px) {
-    .resumen-club { flex-direction: column; }
-    .resumen-item + .resumen-item { border-left: none; border-top: 1px solid var(--card-line); }
-  }
-
   /* ===== Cabecera "puntero" + link ranking ===== */
   .lider-eyebrow-row { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 0 4px 14px; }
   .lider-eyebrow-row .lider-eyebrow { margin: 0; }
@@ -234,12 +217,12 @@
   .podio-tarjeta .mini { font-size: 10px; color: var(--cream-dim); margin-top: 5px; }
   .podio-tarjeta .mini b { color: var(--cream); font-weight: 700; }
   .podio-base {
-    display: flex; align-items: flex-start; justify-content: center; padding-top: 8px;
-    border-radius: 0 0 10px 10px; font-family: 'Bebas Neue'; font-size: 26px; position: relative; z-index: 1;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 0 0 10px 10px; font-family: 'Bebas Neue'; font-size: 22px; position: relative; z-index: 1;
   }
-  .podio-base.oro { height: 58px; background: linear-gradient(180deg, var(--gold-bright), var(--gold)); color: #2b1140; }
-  .podio-base.plata { height: 40px; background: linear-gradient(180deg, #eef1f5, var(--silver)); color: #262b32; }
-  .podio-base.bronce { height: 28px; background: linear-gradient(180deg, #dd9a5c, var(--bronze)); color: #2c1608; }
+  .podio-base.oro { height: 58px; font-size: 26px; background: linear-gradient(180deg, var(--gold-bright), var(--gold)); color: #2b1140; }
+  .podio-base.plata { height: 42px; background: linear-gradient(180deg, #eef1f5, var(--silver)); color: #262b32; }
+  .podio-base.bronce { height: 34px; font-size: 19px; background: linear-gradient(180deg, #dd9a5c, var(--bronze)); color: #2c1608; }
   @media (max-width: 640px) {
     .podio { gap: 8px; }
     .podio-tarjeta { padding: 12px 6px 10px; }
@@ -450,8 +433,6 @@
   </div>
 
   <div id="vista-inicio" class="vista vista-activa">
-    <div class="resumen-club" id="resumenClub"></div>
-
     <div class="scoreboard-wrap" id="scoreboardWrap" style="display:none;"></div>
 
     <div class="lider-wrap" id="liderWrap">
@@ -567,7 +548,6 @@
         if (!document.getElementById("scoreboardWrap").dataset.activo) {
           renderizarPodio(jugadores.slice(0, 3));
         }
-        renderizarResumenClub();
         renderizarTabla(jugadores, true);
         document.getElementById("actualizado").textContent =
           "Actualizado " + new Date().toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" });
@@ -583,7 +563,6 @@
         const res = await fetch(`${API_URL}/api/matches?limit=8`);
         if (!res.ok) throw new Error("no ok");
         partidosCache = await res.json();
-        renderizarResumenClub();
         renderizarUltimoPartido();
         if (!partidosCache.length) {
           lista.innerHTML = '<p class="estado">Todavía no se jugó ningún partido registrado.</p>';
@@ -740,7 +719,7 @@
             <div class="podio-avatar">${j.nivel}</div>
             <div class="nombre">${escapeHtml(j.name)}</div>
             <div class="pts">${j.puntaje}</div>
-            <div class="mini"><b>${j.goles}</b> goles · <b>${j.asistencias}</b> asist.</div>
+            <div class="mini"><b>${j.goles}</b> goles · <b>${j.asistencias}</b> asist. · <b>${j.atajadas}</b> tap.</div>
           </div>
           <div class="podio-base ${puesto === 1 ? "oro" : puesto === 2 ? "plata" : "bronce"}">${puesto}</div>
         `;
@@ -755,17 +734,6 @@
           </div>
           <div class="podio-col p3">${tarjeta(tercero, 3)}</div>
         </div>
-      `;
-    }
-
-    function renderizarResumenClub() {
-      const cont = document.getElementById("resumenClub");
-      if (!jugadores.length) { cont.innerHTML = ""; return; }
-      const totalGoles = jugadores.reduce((acc, j) => acc + (Number(j.goles) || 0), 0);
-      cont.innerHTML = `
-        <div class="resumen-item"><span class="icono">👥</span><span class="txt"><span class="v">${jugadores.length}</span><span class="k">Jugadores</span></span></div>
-        <div class="resumen-item"><span class="icono">⚽</span><span class="txt"><span class="v">${totalGoles}</span><span class="k">Goles totales</span></span></div>
-        <div class="resumen-item"><span class="icono">🏟️</span><span class="txt"><span class="v">${partidosCache.length}</span><span class="k">Partidos registrados</span></span></div>
       `;
     }
 
