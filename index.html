@@ -6,7 +6,7 @@
 <title>Panel de Estadísticas — AXO</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=Orbitron:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
     --pitch:        #0a0612;
@@ -25,24 +25,37 @@
     --discord:      #5865f2;
     --up:           #57d68d;
     --down:         #ff5c5c;
+    --font-display: 'Teko', 'Inter', sans-serif;
+    --font-score:   'Orbitron', 'Inter', sans-serif;
   }
 
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
+
+  @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
   body {
     margin: 0;
     min-height: 100vh;
     background:
       radial-gradient(ellipse 900px 500px at 50% -10%, rgba(155,63,224,0.10), transparent),
+      radial-gradient(1.5px 1.5px at 12% 18%, rgba(217,163,255,0.35), transparent),
+      radial-gradient(1px 1px at 82% 8%, rgba(217,163,255,0.25), transparent),
+      radial-gradient(1.5px 1.5px at 65% 32%, rgba(217,163,255,0.2), transparent),
+      radial-gradient(1px 1px at 25% 55%, rgba(217,163,255,0.25), transparent),
+      radial-gradient(1.5px 1.5px at 92% 60%, rgba(217,163,255,0.18), transparent),
+      radial-gradient(1px 1px at 45% 78%, rgba(217,163,255,0.2), transparent),
+      radial-gradient(1.5px 1.5px at 8% 88%, rgba(217,163,255,0.15), transparent),
       repeating-linear-gradient(180deg, rgba(255,255,255,0.012) 0px, rgba(255,255,255,0.012) 2px, transparent 2px, transparent 42px),
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.008) 0px, rgba(255,255,255,0.008) 1px, transparent 1px, transparent 84px),
       var(--pitch);
+    background-attachment: fixed;
     color: var(--cream);
     font-family: 'Inter', system-ui, sans-serif;
     padding: 0 20px 60px;
   }
 
-  .display { font-family: 'Bebas Neue', 'Inter', sans-serif; letter-spacing: 0.03em; }
+  .display { font-family: var(--font-display); font-weight: 600; letter-spacing: 0.03em; }
 
   /* ===== SIDEBAR ===== */
   .sidebar {
@@ -53,7 +66,7 @@
   }
   .sidebar.colapsado { width: 72px; }
   .sidebar-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
-  .sidebar-logo { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(155,63,224,0.5); flex-shrink: 0; }
+  .sidebar-logo { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 1px solid var(--card-line); flex-shrink: 0; }
   .sidebar-toggle {
     width: 32px; height: 32px; border-radius: 8px; background: var(--pitch-deep);
     border: 1px solid var(--card-line); color: var(--cream-dim); cursor: pointer;
@@ -101,8 +114,8 @@
     display: flex; align-items: center; justify-content: center; gap: 16px;
     text-align: center; position: relative; flex-wrap: wrap;
   }
-  .crest { width: 78px; height: 78px; flex-shrink: 0; border-radius: 50%; object-fit: cover; box-shadow: 0 6px 20px -4px rgba(155,63,224,0.55); border: 2px solid rgba(155,63,224,0.4); }
-  .brand h1 { margin: 0; font-size: 32px; color: var(--gold-bright); text-shadow: 0 0 24px rgba(155,63,224,0.25); line-height: 1; }
+  .crest { width: 78px; height: 78px; flex-shrink: 0; border-radius: 50%; object-fit: cover; border: 1px solid var(--card-line); }
+  .brand h1 { margin: 0; font-size: 32px; color: var(--cream); line-height: 1; }
   .brand .eyebrow { display: block; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 6px; }
   .brand .temporada {
     display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; padding: 3px 11px;
@@ -150,12 +163,12 @@
   }
   .live-tag .dotblink { width: 7px; height: 7px; border-radius: 50%; background: var(--live); animation: blinkLive 1s infinite; }
   @keyframes blinkLive { 0%,100% { opacity: 1; } 50% { opacity: 0.15; } }
-  .score-team { font-family: 'Bebas Neue'; font-size: 20px; letter-spacing: 0.05em; text-align: center; }
+  .score-team { font-family: var(--font-display); font-weight: 600; font-size: 22px; letter-spacing: 0.05em; text-align: center; }
   .score-team.rojo { color: #ff6b6b; }
   .score-team.azul { color: #6fa8ff; }
-  .score-numbers { font-family: 'Bebas Neue'; font-size: 46px; letter-spacing: 0.05em; display: flex; align-items: center; gap: 14px; }
+  .score-numbers { font-family: var(--font-score); font-size: 46px; letter-spacing: 0.05em; display: flex; align-items: center; gap: 14px; }
   .score-numbers .vs { font-size: 20px; color: var(--cream-dim); }
-  .score-timer { font-family: 'Bebas Neue'; font-size: 18px; color: var(--gold-bright); background: var(--pitch-deep); padding: 6px 14px; border-radius: 8px; border: 1px solid var(--card-line); }
+  .score-timer { font-family: var(--font-score); font-size: 18px; color: var(--gold-bright); background: var(--pitch-deep); padding: 6px 14px; border-radius: 8px; border: 1px solid var(--card-line); }
   @media (prefers-reduced-motion: reduce) { .live-dot, .dotblink { animation: none; } }
 
   .lider-wrap { max-width: 1040px; margin: 30px auto 0; }
@@ -179,15 +192,15 @@
     background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.08), transparent 60%), var(--pitch-deep);
     border: 2px solid var(--gold); flex-shrink: 0;
   }
-  .lider-nivel .n { font-family:'Bebas Neue'; font-size: 32px; color: var(--gold-bright); line-height: 1; }
+  .lider-nivel .n { font-family:var(--font-score); font-size: 32px; color: var(--gold-bright); line-height: 1; }
   .lider-nivel .lbl { font-size: 9px; letter-spacing: 0.14em; color: var(--cream-dim); text-transform: uppercase; margin-top: 2px; }
   .lider-info .rango-line { font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
-  .lider-info h2 { margin: 0 0 12px; font-size: 30px; font-family: 'Bebas Neue'; color: var(--cream); letter-spacing: 0.02em; }
+  .lider-info h2 { margin: 0 0 12px; font-size: 34px; font-weight: 600; font-family: var(--font-display); color: var(--cream); letter-spacing: 0.02em; }
   .lider-stats { display: flex; gap: 24px; }
-  .lider-stats .stat .v { font-family: 'Bebas Neue'; font-size: 22px; color: var(--gold-bright); line-height: 1; }
+  .lider-stats .stat .v { font-family: var(--font-score); font-size: 22px; color: var(--gold-bright); line-height: 1; }
   .lider-stats .stat .k { font-size: 10px; color: var(--cream-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 3px; }
   .lider-puntaje { text-align: right; padding-left: 20px; border-left: 1px solid var(--card-line); }
-  .lider-puntaje .v { font-family: 'Bebas Neue'; font-size: 38px; color: var(--gold-bright); line-height: 1; }
+  .lider-puntaje .v { font-family: var(--font-score); font-size: 38px; color: var(--gold-bright); line-height: 1; }
   .lider-puntaje .k { font-size: 10px; color: var(--cream-dim); text-transform: uppercase; letter-spacing: 0.12em; margin-top: 4px; }
 
   /* ===== Cabecera "puntero" + link ranking ===== */
@@ -197,44 +210,63 @@
   .link-ranking:hover { color: var(--gold-bright); }
 
   /* ===== Podio (top 3) ===== */
-  .podio { display: grid; grid-template-columns: 1fr 1.12fr 1fr; align-items: end; gap: 12px; }
+  .podio { display: grid; grid-template-columns: 1.08fr 0.92fr 1.08fr; align-items: end; gap: 12px; }
   .podio-col { display: flex; flex-direction: column; }
   .podio-trofeo { text-align: center; font-size: 24px; margin-bottom: 6px; }
   .podio-tarjeta {
     background: var(--card); border: 1px solid var(--card-line); border-radius: 12px 12px 0 0;
     padding: 16px 10px 14px; text-align: center; cursor: pointer; position: relative; z-index: 2;
+    transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+    animation: fadeInUp 0.45s ease both;
   }
-  .podio-col.p1 .podio-tarjeta { border-color: var(--gold); box-shadow: 0 0 34px -10px rgba(155,63,224,0.45); padding-top: 18px; }
+  .podio-col.p2 .podio-tarjeta { animation-delay: 0.06s; }
+  .podio-col.p3 .podio-tarjeta { animation-delay: 0.12s; }
+  .podio-col.p1 .podio-tarjeta { border-color: var(--gold); box-shadow: 0 0 40px -8px rgba(155,63,224,0.5); padding-top: 18px; }
   .podio-col.p2 .podio-tarjeta { border-color: var(--silver); }
   .podio-col.p3 .podio-tarjeta { border-color: var(--bronze); }
-  .podio-tarjeta:hover { background: #1c1330; }
+  .podio-tarjeta:hover { background: #1c1330; transform: translateY(-3px); }
+  .podio-col.p1 .podio-tarjeta:hover { box-shadow: 0 0 48px -6px rgba(155,63,224,0.65); }
   .podio-avatar {
     width: 40px; height: 40px; border-radius: 50%; margin: 0 auto 8px; display: flex;
-    align-items: center; justify-content: center; font-family: 'Bebas Neue'; font-size: 16px;
-    background: var(--pitch-deep); border: 2px solid var(--card-line); color: var(--cream-dim);
+    align-items: center; justify-content: center; font-family: var(--font-score); font-size: 16px;
+    background: var(--pitch-deep); border: 2px solid var(--card-line); color: var(--cream-dim); flex-shrink: 0;
   }
   .podio-col.p1 .podio-avatar { width: 48px; height: 48px; font-size: 18px; border-color: var(--gold); color: var(--gold-bright); }
   .podio-col.p2 .podio-avatar { border-color: var(--silver); color: var(--silver); }
   .podio-col.p3 .podio-avatar { border-color: var(--bronze); color: var(--bronze); }
   .podio-tarjeta .nombre { font-size: 13px; font-weight: 700; color: var(--cream); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .podio-col.p1 .podio-tarjeta .nombre { font-size: 14.5px; }
-  .podio-tarjeta .pts { font-family: 'Bebas Neue'; font-size: 24px; color: var(--gold-bright); margin-top: 3px; line-height: 1; }
+  .podio-tarjeta .pts { font-family: var(--font-score); font-size: 24px; color: var(--gold-bright); margin-top: 3px; line-height: 1; }
   .podio-col.p1 .podio-tarjeta .pts { font-size: 30px; }
   .podio-tarjeta .mini { font-size: 10px; color: var(--cream-dim); margin-top: 5px; }
   .podio-tarjeta .mini b { color: var(--cream); font-weight: 700; }
+
+  /* Formato lateral: 2do y 3er puesto, más compacto y horizontal */
+  .podio-tarjeta.lateral {
+    display: flex; align-items: center; gap: 10px; text-align: left; padding: 12px 12px;
+  }
+  .podio-tarjeta.lateral .podio-avatar { margin: 0; width: 36px; height: 36px; font-size: 14px; flex-shrink: 0; }
+  .podio-lateral-info { flex: 1; min-width: 0; }
+  .podio-tarjeta.lateral .nombre { display: block; }
+  .podio-tarjeta.lateral .mini { margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .podio-tarjeta.lateral .pts { flex-shrink: 0; margin-top: 0; font-size: 21px; }
+
   .podio-base {
     display: flex; align-items: center; justify-content: center;
-    border-radius: 0 0 10px 10px; font-family: 'Bebas Neue'; font-size: 22px; position: relative; z-index: 1;
+    border-radius: 0 0 10px 10px; font-family: var(--font-score); font-size: 22px; position: relative; z-index: 1;
   }
   .podio-base.oro { height: 58px; font-size: 26px; background: linear-gradient(180deg, var(--gold-bright), var(--gold)); color: #2b1140; }
   .podio-base.plata { height: 42px; background: linear-gradient(180deg, #eef1f5, var(--silver)); color: #262b32; }
   .podio-base.bronce { height: 34px; font-size: 19px; background: linear-gradient(180deg, #dd9a5c, var(--bronze)); color: #2c1608; }
   @media (max-width: 640px) {
-    .podio { gap: 8px; }
-    .podio-tarjeta { padding: 12px 6px 10px; }
-    .podio-tarjeta .mini { display: none; }
-    .podio-tarjeta .pts { font-size: 19px; }
-    .podio-col.p1 .podio-tarjeta .pts { font-size: 24px; }
+    .podio { grid-template-columns: 1fr; gap: 10px; }
+    .podio-col.p1 { order: -1; }
+    .podio-tarjeta { padding: 12px 10px; }
+    .podio-tarjeta:not(.lateral) { display: flex; align-items: center; gap: 10px; text-align: left; border-radius: 12px; }
+    .podio-tarjeta:not(.lateral) .podio-avatar { margin: 0; }
+    .podio-tarjeta .mini { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .podio-base { display: none; }
+    .podio-trofeo { display: none; }
   }
 
   /* ===== Último partido jugado ===== */
@@ -243,8 +275,10 @@
   .ultimo-card {
     border: 1px solid var(--card-line); border-radius: 14px; padding: 18px 22px;
     display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    cursor: pointer; transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
   }
-  .ultimo-card .um-marcador { font-family: 'Bebas Neue'; font-size: 28px; letter-spacing: 0.04em; display: flex; align-items: center; gap: 10px; }
+  .ultimo-card:hover { transform: translateY(-2px); border-color: var(--gold-dim); background: rgba(155,63,224,0.05); }
+  .ultimo-card .um-marcador { font-family: var(--font-score); font-size: 28px; letter-spacing: 0.04em; display: flex; align-items: center; gap: 10px; }
   .ultimo-card .um-marcador .rojo { color: #ff6b6b; }
   .ultimo-card .um-marcador .azul { color: #6fa8ff; }
   .ultimo-card .um-marcador .sep { font-size: 15px; color: var(--cream-dim); }
@@ -256,7 +290,7 @@
   .vista { display: none; }
   .vista.vista-activa { display: block; }
   .panel-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
-  .panel-head h3 { margin: 0; font-family: 'Bebas Neue'; font-size: 21px; letter-spacing: 0.04em; color: var(--cream); }
+  .panel-head h3 { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 24px; letter-spacing: 0.04em; color: var(--cream); }
   .panel-head h3 span { color: var(--gold); }
   .panel-head .sub { font-size: 11.5px; color: var(--cream-dim); }
 
@@ -270,10 +304,11 @@
   select { cursor: pointer; }
 
   .matches-list { display: flex; flex-direction: column; gap: 10px; }
-  .match-card { background: var(--card); border: 1px solid var(--card-line); border-radius: 12px; overflow: hidden; }
+  .match-card { background: var(--card); border: 1px solid var(--card-line); border-radius: 12px; overflow: hidden; transition: border-color 0.18s ease, transform 0.18s ease; animation: fadeInUp 0.4s ease both; }
+  .match-card:hover { border-color: var(--gold-dim); transform: translateY(-2px); }
   .match-card-head { display: flex; align-items: center; gap: 16px; padding: 14px 18px; cursor: pointer; }
   .match-card-head:hover { background: rgba(155,63,224,0.04); }
-  .match-card .marcador { font-family: 'Bebas Neue'; font-size: 22px; letter-spacing: 0.03em; min-width: 90px; }
+  .match-card .marcador { font-family: var(--font-score); font-size: 22px; letter-spacing: 0.03em; min-width: 90px; }
   .match-card .marcador .rojo { color: #e6656b; }
   .match-card .marcador .azul { color: #6fa8ff; }
   .match-card .meta { font-size: 11px; color: var(--cream-dim); flex: 1; }
@@ -296,13 +331,13 @@
   table { width: 100%; border-collapse: collapse; }
   th, td { padding: 12px 16px; text-align: left; font-size: 13.5px; border-bottom: 1px solid var(--card-line); font-variant-numeric: tabular-nums; white-space: nowrap; }
   th { background: var(--pitch-deep); color: var(--cream-dim); font-weight: 700; text-transform: uppercase; font-size: 10.5px; letter-spacing: 0.1em; }
-  tbody tr { transition: background 0.12s ease; cursor: pointer; }
+  tbody tr { transition: background 0.12s ease; cursor: pointer; animation: fadeInUp 0.35s ease both; }
   tbody tr:nth-child(even) td { background: rgba(255,255,255,0.012); }
   tbody tr:hover td { background: rgba(155,63,224,0.07) !important; }
   tbody tr:last-child td { border-bottom: none; }
 
   .pos-cell-inner { display: flex; align-items: center; gap: 5px; }
-  .pos { width: auto; font-family: 'Bebas Neue'; font-size: 16px; color: var(--cream-dim); }
+  .pos { width: auto; font-family: var(--font-score); font-size: 16px; color: var(--cream-dim); }
   tr.top1 .pos { color: var(--gold-bright); }
   tr.top2 .pos { color: var(--silver); }
   tr.top3 .pos { color: var(--bronze); }
@@ -346,9 +381,9 @@
   .modal-head .nivel-circulo {
     width: 62px; height: 62px; border-radius: 50%; flex-shrink: 0; display: flex;
     align-items: center; justify-content: center; background: var(--pitch-deep);
-    border: 2px solid var(--gold); font-family: 'Bebas Neue'; font-size: 24px; color: var(--gold-bright);
+    border: 2px solid var(--gold); font-family: var(--font-score); font-size: 24px; color: var(--gold-bright);
   }
-  .modal-head h2 { margin: 0; font-family: 'Bebas Neue'; font-size: 26px; color: var(--cream); }
+  .modal-head h2 { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 30px; color: var(--cream); }
   .modal-head .rango-line { font-size: 11.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-top: 2px; display: flex; align-items: center; gap: 6px; }
 
   .progreso-wrap { margin-bottom: 22px; }
@@ -359,7 +394,7 @@
   .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
   .stats-grid .box { background: var(--pitch-deep); border: 1px solid var(--card-line); border-radius: 10px; padding: 12px 8px; text-align: center; }
   .stats-grid .box .icono-stat { font-size: 15px; margin-bottom: 2px; }
-  .stats-grid .box .v { font-family: 'Bebas Neue'; font-size: 20px; color: var(--gold-bright); }
+  .stats-grid .box .v { font-family: var(--font-score); font-size: 20px; color: var(--gold-bright); }
   .stats-grid .box .k { font-size: 9.5px; color: var(--cream-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
 
   .grafico-wrap h4 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--cream-dim); margin: 0 0 10px; }
@@ -743,19 +778,37 @@
       const tercero = top3[2];
 
       const tarjeta = (j, puesto) => {
-        if (!j) return `<div class="podio-tarjeta"></div><div class="podio-base ${puesto === 1 ? "oro" : puesto === 2 ? "plata" : "bronce"}"></div>`;
+        const clasePedestal = puesto === 1 ? "oro" : puesto === 2 ? "plata" : "bronce";
+        if (!j) return `<div class="podio-tarjeta${puesto === 1 ? "" : " lateral"}"></div><div class="podio-base ${clasePedestal}"></div>`;
         const tendencia = tendenciasActuales[j.name];
         const tendenciaHtml = tendencia
           ? `<span class="tendencia podio-tendencia ${tendencia}">${tendencia === "subio" ? "▲" : "▼"}</span>`
           : "";
+        const inicial = escapeHtml((j.name || "?").trim().charAt(0).toUpperCase());
+        const mini = `<div class="mini"><b>${j.goles}</b> goles · <b>${j.asistencias}</b> asist. · <b>${j.atajadas}</b> tap.</div>`;
+
+        if (puesto === 1) {
+          return `
+            <div class="podio-tarjeta" onclick="abrirFicha('${encodeURIComponent(j.name)}')">
+              <div class="podio-avatar">${inicial}</div>
+              <div class="nombre">${escapeHtml(j.name)}${tendenciaHtml}</div>
+              <div class="pts">${j.puntaje}</div>
+              ${mini}
+            </div>
+            <div class="podio-base oro">1</div>
+          `;
+        }
+
         return `
-          <div class="podio-tarjeta" onclick="abrirFicha('${encodeURIComponent(j.name)}')">
-            <div class="podio-avatar">${escapeHtml((j.name || "?").trim().charAt(0).toUpperCase())}</div>
-            <div class="nombre">${escapeHtml(j.name)}${tendenciaHtml}</div>
+          <div class="podio-tarjeta lateral" onclick="abrirFicha('${encodeURIComponent(j.name)}')">
+            <div class="podio-avatar">${inicial}</div>
+            <div class="podio-lateral-info">
+              <div class="nombre">${escapeHtml(j.name)}${tendenciaHtml}</div>
+              ${mini}
+            </div>
             <div class="pts">${j.puntaje}</div>
-            <div class="mini"><b>${j.goles}</b> goles · <b>${j.asistencias}</b> asist. · <b>${j.atajadas}</b> tap.</div>
           </div>
-          <div class="podio-base ${puesto === 1 ? "oro" : puesto === 2 ? "plata" : "bronce"}">${puesto}</div>
+          <div class="podio-base ${clasePedestal}">${puesto}</div>
         `;
       };
 
