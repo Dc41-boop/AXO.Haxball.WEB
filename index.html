@@ -62,7 +62,7 @@
     position: fixed; top: 0; left: 0; height: 100vh; width: 220px;
     background: var(--card); border-right: 1px solid var(--card-line);
     display: flex; flex-direction: column; padding: 18px 14px;
-    z-index: 40; transition: width 0.2s ease, transform 0.2s ease;
+    z-index: 40; transition: width 0.2s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .sidebar.colapsado { width: 72px; }
   .sidebar-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
@@ -78,17 +78,32 @@
     display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 10px;
     color: var(--cream-dim); text-decoration: none; font-size: 13.5px; font-weight: 600;
     cursor: pointer; white-space: nowrap; overflow: hidden; border: 1px solid transparent;
+    position: relative; transition: background 0.16s ease, color 0.16s ease;
   }
-  .sidebar-item .icono-nav { width: 19px; height: 19px; flex-shrink: 0; }
+  .sidebar-item::before {
+    content: ""; position: absolute; left: 0; top: 50%; transform: translate(-100%, -50%);
+    width: 3px; height: 60%; border-radius: 0 3px 3px 0; background: var(--gold-bright);
+    transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .sidebar-item .icono-nav { width: 19px; height: 19px; flex-shrink: 0; transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); }
   .sidebar-item:hover { background: rgba(155,63,224,0.08); color: var(--cream); }
+  .sidebar-item:hover::before { transform: translate(0, -50%); }
+  .sidebar-item:hover .icono-nav { transform: scale(1.15) rotate(-6deg); }
   .sidebar-item.activo { background: var(--gold); color: #0a0612; font-weight: 700; }
   .sidebar-item.activo:hover { background: var(--gold); color: #0a0612; }
+  .sidebar-item.activo::before { transform: translate(0, -50%); background: var(--pitch); }
   .sidebar-item.proximamente { cursor: default; opacity: 0.65; }
   .sidebar-item.proximamente:hover { background: transparent; color: var(--cream-dim); }
+  .sidebar-item.proximamente:hover .icono-nav { transform: none; }
   .badge-pronto {
     margin-left: auto; font-size: 8.5px; font-weight: 800; letter-spacing: 0.06em;
     background: rgba(155,63,224,0.18); color: var(--gold-bright);
     border: 1px solid rgba(155,63,224,0.4); padding: 2px 6px; border-radius: 999px;
+    animation: pulsoBadge 2.4s ease-in-out infinite;
+  }
+  @keyframes pulsoBadge {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(155,63,224,0.45); }
+    50% { box-shadow: 0 0 0 4px rgba(155,63,224,0); }
   }
   .sidebar.colapsado .sidebar-item span.label-nav,
   .sidebar.colapsado .sidebar-item .badge-pronto { display: none; }
@@ -97,10 +112,27 @@
   .main-content.sidebar-colapsada { margin-left: 72px; }
 
   .sidebar-mobile-toggle {
-    display: none; position: fixed; top: 14px; left: 14px; z-index: 45;
+    display: none; position: fixed; top: 14px; left: 14px; z-index: 101;
     width: 38px; height: 38px; border-radius: 10px; background: var(--card);
-    border: 1px solid var(--card-line); color: var(--cream); font-size: 16px; cursor: pointer;
+    border: 1px solid var(--card-line); color: var(--cream); cursor: pointer;
   }
+  .hamburguesa { position: relative; width: 18px; height: 13px; display: inline-block; }
+  .hamburguesa i {
+    position: absolute; left: 0; width: 100%; height: 2px; background: currentColor; border-radius: 2px;
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease, top 0.25s ease;
+  }
+  .hamburguesa i:nth-child(1) { top: 0; }
+  .hamburguesa i:nth-child(2) { top: 5.5px; }
+  .hamburguesa i:nth-child(3) { top: 11px; }
+  .sidebar-mobile-toggle.abierto .hamburguesa i:nth-child(1) { top: 5.5px; transform: rotate(45deg); }
+  .sidebar-mobile-toggle.abierto .hamburguesa i:nth-child(2) { opacity: 0; }
+  .sidebar-mobile-toggle.abierto .hamburguesa i:nth-child(3) { top: 5.5px; transform: rotate(-45deg); }
+
+  .sidebar-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(4,2,8,0.6); z-index: 90;
+    opacity: 0; transition: opacity 0.25s ease;
+  }
+  .sidebar-overlay.visible { display: block; opacity: 1; }
 
   @media (max-width: 860px) {
     .sidebar { transform: translateX(-100%); z-index: 100; box-shadow: 0 0 40px rgba(0,0,0,0.5); }
@@ -141,7 +173,20 @@
 
   hr.rule { max-width: 1040px; margin: 0 auto; border: none; height: 1px; background: linear-gradient(90deg, transparent, var(--card-line) 20%, var(--card-line) 80%, transparent); }
 
-  .live-bar { max-width: 1040px; margin: 18px auto 0; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12.5px; color: var(--cream-dim); }
+  .live-bar { max-width: 1040px; margin: 18px auto 0; display: flex; align-items: center; justify-content: center; }
+  .live-pastilla {
+    display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px 6px 10px;
+    border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: 0.02em;
+    background: rgba(255,255,255,0.03); border: 1px solid var(--card-line); color: var(--cream-dim);
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+  .live-pastilla .estado-label {
+    font-family: var(--font-display); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; font-size: 12.5px;
+  }
+  .live-pastilla.online {
+    background: rgba(87,214,141,0.1); border-color: rgba(87,214,141,0.35); color: #bdf0d4;
+  }
+  .live-pastilla.online .estado-label { color: var(--up); }
   .live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--up); box-shadow: 0 0 0 0 rgba(87,214,141,0.6); animation: pulseGreen 2s infinite; }
   .live-dot.off { background: var(--cream-dim); animation: none; }
   @keyframes pulseGreen { 0% { box-shadow: 0 0 0 0 rgba(87,214,141,0.5); } 70% { box-shadow: 0 0 0 7px rgba(87,214,141,0); } 100% { box-shadow: 0 0 0 0 rgba(87,214,141,0); } }
@@ -211,12 +256,12 @@
 
   /* ===== Podio (top 3) ===== */
   .podio { display: grid; grid-template-columns: 1.08fr 0.92fr 1.08fr; align-items: end; gap: 12px; }
-  .podio-col { display: flex; flex-direction: column; }
+  .podio-col { display: flex; flex-direction: column; will-change: transform; transition: transform 0.25s ease-out; }
   .podio-trofeo { text-align: center; font-size: 24px; margin-bottom: 6px; }
   .podio-tarjeta {
     background: var(--card); border: 1px solid var(--card-line); border-radius: 12px 12px 0 0;
     padding: 16px 10px 14px; text-align: center; cursor: pointer; position: relative; z-index: 2;
-    transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+    transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease, filter 0.18s ease;
     animation: fadeInUp 0.45s ease both;
   }
   .podio-col.p2 .podio-tarjeta { animation-delay: 0.06s; }
@@ -225,7 +270,10 @@
   .podio-col.p2 .podio-tarjeta { border-color: var(--silver); }
   .podio-col.p3 .podio-tarjeta { border-color: var(--bronze); }
   .podio-tarjeta:hover { background: #1c1330; transform: translateY(-3px); }
-  .podio-col.p1 .podio-tarjeta:hover { box-shadow: 0 0 48px -6px rgba(155,63,224,0.65); }
+  .podio-col.p1 .podio-tarjeta:hover { box-shadow: 0 0 52px -4px rgba(155,63,224,0.75); transform: translateY(-4px); }
+  .podio:has(.podio-col.p1 .podio-tarjeta:hover) .podio-col:not(.p1) .podio-tarjeta { opacity: 0.55; filter: brightness(0.75); transform: none; }
+  .podio:has(.podio-col.p2 .podio-tarjeta:hover) .podio-col:not(.p2) .podio-tarjeta { opacity: 0.55; filter: brightness(0.75); transform: none; }
+  .podio:has(.podio-col.p3 .podio-tarjeta:hover) .podio-col:not(.p3) .podio-tarjeta { opacity: 0.55; filter: brightness(0.75); transform: none; }
   .podio-avatar {
     width: 40px; height: 40px; border-radius: 50%; margin: 0 auto 8px; display: flex;
     align-items: center; justify-content: center; font-family: var(--font-score); font-size: 16px;
@@ -234,11 +282,11 @@
   .podio-col.p1 .podio-avatar { width: 48px; height: 48px; font-size: 18px; border-color: var(--gold); color: var(--gold-bright); }
   .podio-col.p2 .podio-avatar { border-color: var(--silver); color: var(--silver); }
   .podio-col.p3 .podio-avatar { border-color: var(--bronze); color: var(--bronze); }
-  .podio-tarjeta .nombre { font-size: 13px; font-weight: 700; color: var(--cream); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .podio-tarjeta .nombre { font-size: 13px; font-weight: 700; color: var(--cream); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
   .podio-col.p1 .podio-tarjeta .nombre { font-size: 14.5px; }
-  .podio-tarjeta .pts { font-family: var(--font-score); font-size: 24px; color: var(--gold-bright); margin-top: 3px; line-height: 1; }
+  .podio-tarjeta .pts { font-family: var(--font-score); font-size: 24px; color: var(--gold-bright); margin-top: 3px; line-height: 1; text-shadow: 0 1px 4px rgba(0,0,0,0.5); }
   .podio-col.p1 .podio-tarjeta .pts { font-size: 30px; }
-  .podio-tarjeta .mini { font-size: 10px; color: var(--cream-dim); margin-top: 5px; }
+  .podio-tarjeta .mini { font-size: 11px; color: #c3bfae; margin-top: 5px; }
   .podio-tarjeta .mini b { color: var(--cream); font-weight: 700; }
 
   /* Formato lateral: 2do y 3er puesto, más compacto y horizontal */
@@ -429,7 +477,10 @@
 </head>
 <body>
 
-  <button class="sidebar-mobile-toggle" id="sidebarMobileToggle" aria-label="Abrir menú">☰</button>
+  <button class="sidebar-mobile-toggle" id="sidebarMobileToggle" aria-label="Abrir menú">
+    <span class="hamburguesa"><i></i><i></i><i></i></span>
+  </button>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-top">
@@ -476,8 +527,11 @@
   <hr class="rule" />
 
   <div class="live-bar">
-    <span class="live-dot off" id="liveDot"></span>
-    <span id="liveTexto">Consultando estado del host…</span>
+    <span class="live-pastilla" id="livePastilla">
+      <span class="live-dot off" id="liveDot"></span>
+      <span class="estado-label" id="liveEstadoLabel">…</span>
+      <span id="liveTexto">Consultando estado del host…</span>
+    </span>
   </div>
 
   <div id="vista-inicio" class="vista vista-activa">
@@ -681,6 +735,8 @@
     async function cargarEstadoVivo() {
       const dot = document.getElementById("liveDot");
       const texto = document.getElementById("liveTexto");
+      const pastilla = document.getElementById("livePastilla");
+      const label = document.getElementById("liveEstadoLabel");
       const scoreboardWrap = document.getElementById("scoreboardWrap");
       const liderWrap = document.getElementById("liderWrap");
       try {
@@ -689,10 +745,14 @@
 
         if (estado.cantidad > 0) {
           dot.classList.remove("off");
-          texto.textContent = `${estado.cantidad} jugador${estado.cantidad === 1 ? "" : "es"} en el host ahora`;
+          pastilla.classList.add("online");
+          label.textContent = "Online";
+          texto.textContent = `· ${estado.cantidad} jugador${estado.cantidad === 1 ? "" : "es"} en el host`;
         } else {
           dot.classList.add("off");
-          texto.textContent = "El host está vacío en este momento";
+          pastilla.classList.remove("online");
+          label.textContent = "Offline";
+          texto.textContent = "· el host está vacío en este momento";
         }
 
         if (estado.enPartido && estado.cantidad > 0 && estado.scoreRed !== null) {
@@ -712,7 +772,9 @@
         }
       } catch (err) {
         dot.classList.add("off");
-        texto.textContent = "No se pudo consultar el estado del host";
+        pastilla.classList.remove("online");
+        label.textContent = "Offline";
+        texto.textContent = "· no se pudo consultar el estado del host";
       }
     }
 
@@ -862,7 +924,7 @@
         }
 
         return `
-          <tr class="${claseFila}" onclick="abrirFicha('${encodeURIComponent(j.name)}')">
+          <tr class="${claseFila}" style="animation-delay:${Math.min(i * 0.025, 0.3)}s" onclick="abrirFicha('${encodeURIComponent(j.name)}')">
             <td><div class="pos-cell-inner"><span class="pos">${pos}</span>${tendenciaHtml}</div></td>
             <td><div class="nombre-cell">${medalla}<a href="#" class="nombre-link" onclick="event.preventDefault(); abrirFicha('${encodeURIComponent(j.name)}')"><strong>${escapeHtml(j.name)}</strong></a></div></td>
             <td>${badgeInline(j.nivel, "tabla" + i)}</td>
@@ -1081,9 +1143,39 @@
     });
 
     // Abrir/cerrar en mobile (menú superpuesto)
-    document.getElementById("sidebarMobileToggle").addEventListener("click", () => {
-      sidebar.classList.toggle("abierto");
+    const mobileToggle = document.getElementById("sidebarMobileToggle");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+    function toggleSidebarMobile(forzarCerrado) {
+      const abrir = forzarCerrado === true ? false : !sidebar.classList.contains("abierto");
+      sidebar.classList.toggle("abierto", abrir);
+      mobileToggle.classList.toggle("abierto", abrir);
+      sidebarOverlay.classList.toggle("visible", abrir);
+      mobileToggle.setAttribute("aria-label", abrir ? "Cerrar menú" : "Abrir menú");
+    }
+    mobileToggle.addEventListener("click", () => toggleSidebarMobile());
+    sidebarOverlay.addEventListener("click", () => toggleSidebarMobile(true));
+    document.querySelectorAll(".sidebar-item").forEach(el => {
+      el.addEventListener("click", () => toggleSidebarMobile(true));
     });
+
+    // Parallax sutil del podio al mover el mouse
+    if (window.matchMedia("(hover: hover)").matches && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      let parallaxRaf = null;
+      document.addEventListener("mousemove", (e) => {
+        if (parallaxRaf) return;
+        parallaxRaf = requestAnimationFrame(() => {
+          parallaxRaf = null;
+          const podio = document.getElementById("podio");
+          if (!podio || !podio.querySelector(".podio-col")) return;
+          const dx = (e.clientX / window.innerWidth - 0.5) * 2;
+          const dy = (e.clientY / window.innerHeight - 0.5) * 2;
+          podio.querySelectorAll(".podio-col").forEach(col => {
+            const factor = col.classList.contains("p1") ? 9 : 4;
+            col.style.transform = `translate(${dx * factor}px, ${dy * factor * 0.5}px)`;
+          });
+        });
+      });
+    }
   </script>
 
 </body>
