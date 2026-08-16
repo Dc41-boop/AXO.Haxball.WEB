@@ -104,6 +104,12 @@
   .crest { width: 78px; height: 78px; flex-shrink: 0; border-radius: 50%; object-fit: cover; box-shadow: 0 6px 20px -4px rgba(155,63,224,0.55); border: 2px solid rgba(155,63,224,0.4); }
   .brand h1 { margin: 0; font-size: 32px; color: var(--gold-bright); text-shadow: 0 0 24px rgba(155,63,224,0.25); line-height: 1; }
   .brand .eyebrow { display: block; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold-dim); margin-bottom: 6px; }
+  .brand .temporada {
+    display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; padding: 3px 11px;
+    border: 1px solid var(--card-line); border-radius: 999px; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--cream-dim); background: rgba(255,255,255,0.02);
+  }
+  .brand .temporada::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--gold-bright); }
 
   .discord-btn {
     position: absolute; right: 0; top: 50%; transform: translateY(-50%);
@@ -416,6 +422,7 @@
     <div class="brand">
       <span class="eyebrow">Comunidad Haxball</span>
       <h1 class="display">AXO</h1>
+      <span class="temporada">Temporada 1</span>
     </div>
     <a class="discord-btn" href="https://discord.gg/tHDbmhfDw6" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
