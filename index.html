@@ -301,7 +301,7 @@
   tbody tr:hover td { background: rgba(155,63,224,0.07) !important; }
   tbody tr:last-child td { border-bottom: none; }
 
-  .pos-cell { display: flex; align-items: center; gap: 5px; }
+  .pos-cell-inner { display: flex; align-items: center; gap: 5px; }
   .pos { width: auto; font-family: 'Bebas Neue'; font-size: 16px; color: var(--cream-dim); }
   tr.top1 .pos { color: var(--gold-bright); }
   tr.top2 .pos { color: var(--silver); }
@@ -810,7 +810,7 @@
 
         return `
           <tr class="${claseFila}" onclick="abrirFicha('${encodeURIComponent(j.name)}')">
-            <td class="pos-cell"><span class="pos">${pos}</span>${tendenciaHtml}</td>
+            <td><div class="pos-cell-inner"><span class="pos">${pos}</span>${tendenciaHtml}</div></td>
             <td><div class="nombre-cell">${medalla}<a href="#" class="nombre-link" onclick="event.preventDefault(); abrirFicha('${encodeURIComponent(j.name)}')"><strong>${escapeHtml(j.name)}</strong></a></div></td>
             <td>${badgeInline(j.nivel, "tabla" + i)}</td>
             <td>${j.nivel}</td>
