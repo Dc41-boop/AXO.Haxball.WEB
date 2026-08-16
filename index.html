@@ -723,7 +723,7 @@
         if (!j) return `<div class="podio-tarjeta"></div><div class="podio-base ${puesto === 1 ? "oro" : puesto === 2 ? "plata" : "bronce"}"></div>`;
         return `
           <div class="podio-tarjeta" onclick="abrirFicha('${encodeURIComponent(j.name)}')">
-            <div class="podio-avatar">${j.nivel}</div>
+            <div class="podio-avatar">${escapeHtml((j.name || "?").trim().charAt(0).toUpperCase())}</div>
             <div class="nombre">${escapeHtml(j.name)}</div>
             <div class="pts">${j.puntaje}</div>
             <div class="mini"><b>${j.goles}</b> goles · <b>${j.asistencias}</b> asist. · <b>${j.atajadas}</b> tap.</div>
