@@ -435,8 +435,17 @@
     padding: 60px 16px; overflow-y: auto;
   }
   .modal-overlay.open { display: flex; }
-  .modal-card { width: 100%; max-width: 560px; border-radius: 18px; padding: 2px; background: linear-gradient(135deg, var(--gold-bright), var(--gold) 45%, var(--gold-dim) 100%); }
-  .modal-inner { background: var(--card); border-radius: 16px; padding: 28px; position: relative; }
+  .modal-card {
+    width: 100%; max-width: 560px; border-radius: 18px; padding: 2px;
+    background: linear-gradient(135deg, var(--tier-c1, var(--gold-bright)), var(--tier-c2, var(--gold)) 45%, var(--gold-dim) 100%);
+    animation: respirarBorde 3.2s ease-in-out infinite;
+  }
+  @keyframes respirarBorde {
+    0%, 100% { box-shadow: 0 0 20px -6px var(--tier-c2, var(--gold)); }
+    50% { box-shadow: 0 0 38px 0px var(--tier-c2, var(--gold)); }
+  }
+  @media (prefers-reduced-motion: reduce) { .modal-card { animation: none; } }
+  .modal-inner { background: rgba(20,12,32,0.72); backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%); border-radius: 16px; padding: 28px; position: relative; }
   .modal-close {
     position: absolute; top: 16px; right: 16px; width: 30px; height: 30px; border-radius: 50%;
     background: var(--pitch-deep); border: 1px solid var(--card-line); color: var(--cream-dim);
@@ -455,8 +464,22 @@
 
   .progreso-wrap { margin-bottom: 22px; }
   .progreso-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--cream-dim); margin-bottom: 6px; }
-  .progreso-barra { height: 8px; border-radius: 999px; background: var(--pitch-deep); overflow: hidden; border: 1px solid var(--card-line); }
-  .progreso-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dim), var(--gold-bright)); border-radius: 999px; transition: width 0.4s ease; }
+  .progreso-fila { display: flex; align-items: center; gap: 10px; }
+  .progreso-barra {
+    position: relative; flex: 1; height: 11px; border-radius: 999px; background: var(--pitch-deep);
+    overflow: hidden; border: 1px solid var(--card-line);
+  }
+  .progreso-fill { height: 100%; background: linear-gradient(90deg, var(--gold-dim), var(--gold-bright)); border-radius: 999px; transition: width 0.4s ease; position: relative; z-index: 1; }
+  .progreso-ticks {
+    position: absolute; inset: 0; z-index: 2; pointer-events: none;
+    background-image: repeating-linear-gradient(90deg, rgba(4,2,8,0.55) 0, rgba(4,2,8,0.55) 1px, transparent 1px, transparent calc(100% / 9));
+  }
+  .progreso-siguiente-rango {
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    width: 24px; height: 26px; opacity: 0.55; transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .progreso-siguiente-rango.proximo { opacity: 1; }
+  .progreso-siguiente-rango svg { width: 100%; height: 100%; }
 
   .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
   .stats-grid .box { background: var(--pitch-deep); border: 1px solid var(--card-line); border-radius: 10px; padding: 12px 8px; text-align: center; }
@@ -473,6 +496,9 @@
 
   .insignias-wrap, .historial-wrap { margin-bottom: 20px; }
   .insignias-wrap h4, .historial-wrap h4 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--cream-dim); margin: 0 0 10px; }
+  .vacio-fantasma { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 24px 20px; color: var(--cream-dim); opacity: 0.5; }
+  .vacio-fantasma svg { width: 40px; height: 40px; }
+  .vacio-fantasma .cap { font-size: 10.5px; letter-spacing: 0.02em; text-align: center; }
   .insignias-lista { display: flex; flex-wrap: wrap; gap: 8px; }
   .insignia-chip {
     display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--cream);
@@ -649,7 +675,7 @@
   </div><!-- /main-content -->
 
   <div class="modal-overlay" id="modalOverlay">
-    <div class="modal-card">
+    <div class="modal-card" id="modalCard">
       <div class="modal-inner" id="modalInner">
         <button class="modal-close" id="modalClose" aria-label="Cerrar">✕</button>
         <div id="modalContenido"><p class="estado">Cargando…</p></div>
@@ -1053,7 +1079,14 @@
 
     function renderHistorialPartidos(partidosJugador) {
       if (!partidosJugador.length) {
-        return `<p class="sin-eventos">Todavía no encontramos partidos con goles o asistencias registradas de este jugador.</p>`;
+        return `
+          <div class="vacio-fantasma">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14 6h20M14 42h20M15 6c0 8 5 10 9 12-4 2-9 4-9 12M33 6c0 8-5 10-9 12 4 2 9 4 9 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="cap">Sin partidos recientes registrados</span>
+          </div>
+        `;
       }
       return `<div class="historial-lista">` + partidosJugador.map(pj => {
         const claseResultado = pj.resultado === "victoria" ? "victoria" : pj.resultado === "derrota" ? "derrota" : "empate";
@@ -1082,7 +1115,15 @@
       if (info.invictoStreak >= 3) insignias.push({ icono: "🛡️", label: `Invicto x${info.invictoStreak}` });
 
       if (!insignias.length) {
-        return `<p class="sin-eventos">Todavía no desbloqueó insignias. ¡Seguí jugando!</p>`;
+        return `
+          <div class="vacio-fantasma">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M24 4l6.5 4v8.5C30.5 24 28 30 24 33c-4-3-6.5-9-6.5-16.5V8L24 4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+              <path d="M20 38h8M24 33v5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+            <span class="cap">Todavía no desbloqueó insignias</span>
+          </div>
+        `;
       }
       return `<div class="insignias-lista">` + insignias.map(b => `
         <div class="insignia-chip"><span class="insignia-icono">${b.icono}</span>${b.label}</div>
@@ -1103,6 +1144,16 @@
         ]);
         const j = await resJugador.json();
         const historial = resHistorial.ok ? await resHistorial.json() : [];
+
+        const tierJugador = getBadgeTier(j.nivel);
+        const modalCard = document.getElementById("modalCard");
+        modalCard.style.setProperty("--tier-c1", tierJugador.c1);
+        modalCard.style.setProperty("--tier-c2", tierJugador.c2);
+
+        const esNivelMax = j.nivel >= 100;
+        const tierSiguiente = esNivelMax ? tierJugador : getBadgeTier(j.nivel + 1);
+        const hayPromocionCerca = !esNivelMax && tierSiguiente.tier !== tierJugador.tier;
+        const nivelParaIconoSiguiente = esNivelMax ? j.nivel : j.nivel + 1;
 
         const faltan = j.puntosFaltantes ?? 0;
         const porcentaje = j.progresoPorcentaje ?? 0;
@@ -1125,7 +1176,15 @@
               <span>Progreso al próximo nivel</span>
               <span>${j.nivel >= 100 ? "Nivel máximo" : `Faltan ${faltan} pts`}</span>
             </div>
-            <div class="progreso-barra"><div class="progreso-fill" style="width:${porcentaje}%"></div></div>
+            <div class="progreso-fila">
+              <div class="progreso-barra">
+                <div class="progreso-fill" style="width:${porcentaje}%"></div>
+                <div class="progreso-ticks"></div>
+              </div>
+              <div class="progreso-siguiente-rango ${hayPromocionCerca ? "proximo" : ""}" title="${hayPromocionCerca ? "Próximo rango: " + tierSiguiente.label : "Rango: " + tierJugador.label}">
+                ${badgeSVG(nivelParaIconoSiguiente, "proximo")}
+              </div>
+            </div>
           </div>
 
           <div class="stats-grid">
