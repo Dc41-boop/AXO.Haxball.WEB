@@ -444,7 +444,7 @@
   .podio-tendencia { font-size: 10px; margin-left: 5px; vertical-align: middle; }
 
   .nombre-cell { display: flex; align-items: center; gap: 8px; }
-  .medalla { font-size: 13px; }
+  .medalla { font-size: 13px; margin-right: 4px; }
   .nombre-link { position: relative; color: var(--cream); text-decoration: none; display: inline-block; }
   .nombre-link::after {
     content: ""; position: absolute; left: 0; right: 0; bottom: -3px; height: 1px;
@@ -452,6 +452,32 @@
   }
   .nombre-link:hover { color: var(--gold-bright); }
   .nombre-link:hover::after { opacity: 1; }
+
+  .tabla-avatar {
+    width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-weight: 700; font-size: 12px;
+    background: rgba(155,63,224,0.14); border: 1px solid rgba(155,63,224,0.35); color: var(--cream);
+  }
+  .tabla-avatar.av-top1 { background: rgba(240,196,90,0.16); border-color: var(--gold-bright); color: var(--gold-bright); }
+  .tabla-avatar.av-top2 { background: rgba(199,205,214,0.16); border-color: var(--silver); color: var(--silver); }
+  .tabla-avatar.av-top3 { background: rgba(176,112,58,0.18); border-color: var(--bronze); color: var(--bronze); }
+
+  tr.top1 td:first-child { box-shadow: inset 3px 0 0 var(--gold-bright); }
+  tr.top2 td:first-child { box-shadow: inset 3px 0 0 var(--silver); }
+  tr.top3 td:first-child { box-shadow: inset 3px 0 0 var(--bronze); }
+
+  .pgpj-cell { display: flex; flex-direction: column; gap: 4px; min-width: 54px; }
+  .pgpj-txt { font-size: 12px; color: var(--cream-dim); }
+  .pgpj-bar { width: 100%; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.08); overflow: hidden; }
+  .pgpj-fill { height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--gold), var(--gold-bright)); }
+
+  thead th.th-sortable { cursor: pointer; user-select: none; transition: color 0.15s ease; }
+  thead th.th-sortable:hover { color: var(--cream); }
+  .th-arrow { display: inline-block; margin-left: 4px; font-size: 9px; color: var(--gold-bright); }
+  thead th { position: sticky; top: 0; z-index: 2; }
+
+  .resultados-contador { margin: 0 2px 10px; font-size: 12px; color: var(--cream-dim); }
 
   .rango-badge { display: inline-flex; align-items: center; gap: 6px; }
   .rango-badge svg { width: 20px; height: 22px; flex-shrink: 0; }
@@ -694,6 +720,7 @@
         </select>
       </div>
     </div>
+    <p class="resultados-contador" id="resultadosContador"></p>
     <div class="tabla-wrap">
       <div id="contenido"><p class="estado">Cargando estadísticas…</p></div>
     </div>
@@ -962,8 +989,7 @@
           ? `<span class="tendencia podio-tendencia ${tendencia}">${tendencia === "subio" ? "▲" : "▼"}</span>`
           : "";
         const inicial = escapeHtml((j.name || "?").trim().charAt(0).toUpperCase());
-        const puntajeFmt = Number(j.puntaje || 0).toFixed(2);
-        const mini = `<div class="mini"><b>${puntajeFmt}</b> PTS · <b>${j.goles}</b> goles · <b>${j.asistencias}</b> asist. · <b>${j.atajadas}</b> tap.</div>`;
+        const mini = `<div class="mini"><b>${j.goles}</b> goles · <b>${j.asistencias}</b> asist. · <b>${j.atajadas}</b> tap.</div>`;
         const nombreSeguro = encodeURIComponent(j.name);
         const clickHandler = `abrirModalEstadisticas(decodeURIComponent('${nombreSeguro}'))`;
 
@@ -1021,18 +1047,57 @@
       `;
     }
 
+    let ultimaListaTabla = [];
+    let ordenTablaCliente = { campo: null, asc: false };
+
+    function ordenarTablaCliente(campo) {
+      if (ordenTablaCliente.campo === campo) {
+        ordenTablaCliente.asc = !ordenTablaCliente.asc;
+      } else {
+        ordenTablaCliente.campo = campo;
+        ordenTablaCliente.asc = false;
+      }
+      renderizarTabla(ultimaListaTabla, false);
+    }
+
+    function flechaOrden(campo) {
+      if (ordenTablaCliente.campo !== campo) return `<span class="th-arrow"></span>`;
+      return `<span class="th-arrow">${ordenTablaCliente.asc ? "▲" : "▼"}</span>`;
+    }
+
     function renderizarTabla(lista, esListaCompleta) {
       const contenido = document.getElementById("contenido");
+      const contador = document.getElementById("resultadosContador");
+      ultimaListaTabla = lista.slice();
+
       if (!lista.length) {
         contenido.innerHTML = '<p class="estado">Todavía no hay jugadores registrados.</p>';
+        if (contador) contador.textContent = "";
         return;
+      }
+      if (contador) {
+        contador.textContent = `Mostrando ${lista.length} jugador${lista.length === 1 ? "" : "es"}`;
       }
       const medallas = ["🥇", "🥈", "🥉"];
 
-      let filas = lista.map((j, i) => {
+      let listaOrdenada = lista.slice();
+      if (ordenTablaCliente.campo) {
+        const campo = ordenTablaCliente.campo;
+        listaOrdenada.sort((a, b) => {
+          const va = Number(a[campo]) || 0;
+          const vb = Number(b[campo]) || 0;
+          return ordenTablaCliente.asc ? va - vb : vb - va;
+        });
+      }
+
+      let filas = listaOrdenada.map((j, i) => {
         const pos = i + 1;
         const claseFila = i === 0 ? "top1" : i === 1 ? "top2" : i === 2 ? "top3" : "";
         const medalla = i < 3 ? `<span class="medalla">${medallas[i]}</span>` : "";
+        const inicial = escapeHtml((j.name || "?").trim().charAt(0).toUpperCase());
+        const pj = Number(j.partidos) || 0;
+        const pg = Number(j.ganados) || 0;
+        const pct = pj > 0 ? Math.round((pg / pj) * 100) : 0;
 
         let tendenciaHtml = "";
         const tendencia = tendenciasActuales[j.name];
@@ -1045,14 +1110,22 @@
         return `
           <tr class="${claseFila}" style="animation-delay:${Math.min(i * 0.025, 0.3)}s" onclick="abrirFicha('${encodeURIComponent(j.name)}')">
             <td><div class="pos-cell-inner"><span class="pos">${pos}</span>${tendenciaHtml}</div></td>
-            <td><div class="nombre-cell">${medalla}<a href="#" class="nombre-link" onclick="event.preventDefault(); abrirFicha('${encodeURIComponent(j.name)}')"><strong>${escapeHtml(j.name)}</strong></a></div></td>
+            <td><div class="nombre-cell">
+              <div class="tabla-avatar${claseFila ? " av-" + claseFila : ""}">${inicial}</div>
+              <a href="#" class="nombre-link" onclick="event.preventDefault(); abrirFicha('${encodeURIComponent(j.name)}')">${medalla}<strong>${escapeHtml(j.name)}</strong></a>
+            </div></td>
             <td>${badgeInline(j.nivel, "tabla" + i)}</td>
             <td>${j.nivel}</td>
             <td>${j.puntaje}</td>
             <td>${j.goles}</td>
             <td>${j.asistencias}</td>
             <td>${j.atajadas}</td>
-            <td>${j.ganados}/${j.partidos}</td>
+            <td>
+              <div class="pgpj-cell">
+                <span class="pgpj-txt">${j.ganados}/${j.partidos}</span>
+                <div class="pgpj-bar"><div class="pgpj-fill" style="width:${pct}%"></div></div>
+              </div>
+            </td>
           </tr>
         `;
       }).join("");
@@ -1060,8 +1133,13 @@
       contenido.innerHTML = `
         <table>
           <thead><tr>
-            <th>#</th><th>Jugador</th><th>Rango</th><th>Nivel</th><th>Puntos</th>
-            <th>Goles</th><th>Asist.</th><th>Tapadas</th><th>PG/PJ</th>
+            <th>#</th><th>Jugador</th><th>Rango</th>
+            <th class="th-sortable" onclick="ordenarTablaCliente('nivel')">Nivel${flechaOrden("nivel")}</th>
+            <th class="th-sortable" onclick="ordenarTablaCliente('puntaje')">Puntos${flechaOrden("puntaje")}</th>
+            <th class="th-sortable" onclick="ordenarTablaCliente('goles')">Goles${flechaOrden("goles")}</th>
+            <th class="th-sortable" onclick="ordenarTablaCliente('asistencias')">Asist.${flechaOrden("asistencias")}</th>
+            <th class="th-sortable" onclick="ordenarTablaCliente('atajadas')">Tapadas${flechaOrden("atajadas")}</th>
+            <th class="th-sortable" onclick="ordenarTablaCliente('ganados')">PG/PJ${flechaOrden("ganados")}</th>
           </tr></thead>
           <tbody>${filas}</tbody>
         </table>
