@@ -335,6 +335,37 @@
     .podio-trofeo { display: none; }
   }
 
+  /* ===== El Trono de AXO (cabecera de sección + badge del puntero) ===== */
+  .trono-header {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap; margin: 0 4px;
+  }
+  .trono-titulo {
+    margin: 0; font-family: var(--font-display); font-weight: 600;
+    font-size: 32px; letter-spacing: 0.03em; color: var(--cream); line-height: 1.1;
+  }
+  .trono-subtitulo { margin: 6px 4px 16px; font-size: 13px; color: var(--cream-dim); }
+  .trono-cta {
+    display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; white-space: nowrap;
+    padding: 9px 18px; border-radius: 999px; font-size: 12.5px; font-weight: 700; letter-spacing: 0.03em;
+    background: linear-gradient(135deg, var(--gold-bright), var(--gold)); color: #1c0d2e; text-decoration: none;
+    box-shadow: 0 10px 24px -10px rgba(155,63,224,0.6);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .trono-cta:hover { transform: translateY(-2px); box-shadow: 0 14px 30px -8px rgba(155,63,224,0.75); }
+  @media (max-width: 640px) {
+    .trono-header { flex-direction: column; align-items: flex-start; }
+    .trono-cta { align-self: flex-start; }
+  }
+
+  .badge-puntero {
+    display: inline-flex; align-items: center; gap: 5px; margin-bottom: 8px; padding: 3px 11px;
+    border-radius: 999px; font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 800;
+    letter-spacing: 0.09em; text-transform: uppercase; color: #1c0d2e;
+    background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+    box-shadow: 0 0 14px rgba(155,63,224,0.55);
+  }
+
   /* ===== Último partido jugado ===== */
   .ultimo-partido-wrap { max-width: 1040px; margin: 30px auto 0; }
   .ultimo-partido-wrap .lider-eyebrow { margin: 0 0 14px 4px; }
@@ -621,10 +652,11 @@
     <div class="scoreboard-wrap" id="scoreboardWrap" style="display:none;"></div>
 
     <div class="lider-wrap" id="liderWrap">
-      <div class="lider-eyebrow-row">
-        <p class="lider-eyebrow">Puntero de la tabla</p>
-        <a href="#" class="link-ranking" onclick="irAVista(event, 'ranking', document.querySelector('.sidebar-item[data-vista=ranking]'))">Ver ranking completo →</a>
+      <div class="trono-header">
+        <h2 class="trono-titulo">El Trono de AXO</h2>
+        <a href="#" class="trono-cta" onclick="irAVista(event, 'ranking', document.querySelector('.sidebar-item[data-vista=ranking]'))">Ver ranking completo →</a>
       </div>
+      <p class="trono-subtitulo">Los tres jugadores que están dominando el host en esta temporada.</p>
       <div id="podio"></div>
     </div>
 
@@ -935,6 +967,7 @@
         if (puesto === 1) {
           return `
             <div class="podio-tarjeta" onclick="abrirFicha('${encodeURIComponent(j.name)}')">
+              <span class="badge-puntero">👑 Puntero absoluto</span>
               <div class="podio-avatar">${inicial}</div>
               <div class="nombre">${escapeHtml(j.name)}${tendenciaHtml}</div>
               <div class="pts">${j.puntaje}<span class="pts-label">pts</span></div>
