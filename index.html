@@ -285,12 +285,12 @@
   }
   .podio-col.p2 .podio-tarjeta { border-color: rgba(199,205,214,0.5); }
   .podio-col.p3 .podio-tarjeta { border-color: rgba(176,112,58,0.55); }
-  .podio-tarjeta:hover { background: #1c1330; transform: translateY(-3px); }
+  .podio-tarjeta:hover { background: #1c1330; transform: translateY(-4px); }
   .podio-col.p2 .podio-tarjeta:hover, .podio-col.p3 .podio-tarjeta:hover { background: rgba(28,19,48,0.7); }
   .podio-col.p1 .podio-tarjeta:hover { box-shadow: 0 0 58px -4px rgba(155,63,224,0.85); transform: translateY(-4px); animation-play-state: paused; }
-  .podio:has(.podio-col.p1 .podio-tarjeta:hover) .podio-col:not(.p1) .podio-tarjeta { opacity: 0.55; filter: brightness(0.75); transform: none; }
-  .podio:has(.podio-col.p2 .podio-tarjeta:hover) .podio-col:not(.p2) .podio-tarjeta { opacity: 0.55; filter: brightness(0.75); transform: none; }
-  .podio:has(.podio-col.p3 .podio-tarjeta:hover) .podio-col:not(.p3) .podio-tarjeta { opacity: 0.55; filter: brightness(0.75); transform: none; }
+  .podio:has(.podio-col.p1 .podio-tarjeta:hover) .podio-col:not(.p1) .podio-tarjeta { opacity: 0.6; transform: none; }
+  .podio:has(.podio-col.p2 .podio-tarjeta:hover) .podio-col:not(.p2) .podio-tarjeta { opacity: 0.6; transform: none; }
+  .podio:has(.podio-col.p3 .podio-tarjeta:hover) .podio-col:not(.p3) .podio-tarjeta { opacity: 0.6; transform: none; }
   .podio-avatar {
     width: 40px; height: 40px; border-radius: 50%; margin: 0 auto 8px; display: flex;
     align-items: center; justify-content: center; font-family: var(--font-score); font-size: 16px;
@@ -962,11 +962,14 @@
           ? `<span class="tendencia podio-tendencia ${tendencia}">${tendencia === "subio" ? "▲" : "▼"}</span>`
           : "";
         const inicial = escapeHtml((j.name || "?").trim().charAt(0).toUpperCase());
-        const mini = `<div class="mini"><b>${j.goles}</b> goles · <b>${j.asistencias}</b> asist. · <b>${j.atajadas}</b> tap.</div>`;
+        const puntajeFmt = Number(j.puntaje || 0).toFixed(2);
+        const mini = `<div class="mini"><b>${puntajeFmt}</b> PTS · <b>${j.goles}</b> goles · <b>${j.asistencias}</b> asist. · <b>${j.atajadas}</b> tap.</div>`;
+        const nombreSeguro = encodeURIComponent(j.name);
+        const clickHandler = `abrirModalEstadisticas(decodeURIComponent('${nombreSeguro}'))`;
 
         if (puesto === 1) {
           return `
-            <div class="podio-tarjeta" onclick="abrirFicha('${encodeURIComponent(j.name)}')">
+            <div class="podio-tarjeta" onclick="${clickHandler}">
               <span class="badge-puntero">👑 Puntero absoluto</span>
               <div class="podio-avatar">${inicial}</div>
               <div class="nombre">${escapeHtml(j.name)}${tendenciaHtml}</div>
@@ -978,7 +981,7 @@
         }
 
         return `
-          <div class="podio-tarjeta lateral" onclick="abrirFicha('${encodeURIComponent(j.name)}')">
+          <div class="podio-tarjeta lateral" onclick="${clickHandler}">
             <div class="podio-avatar">${inicial}</div>
             <div class="podio-lateral-info">
               <div class="nombre">${escapeHtml(j.name)}${tendenciaHtml}</div>
@@ -1161,6 +1164,10 @@
       return `<div class="insignias-lista">` + insignias.map(b => `
         <div class="insignia-chip"><span class="insignia-icono">${b.icono}</span>${b.label}</div>
       `).join("") + `</div>`;
+    }
+
+    function abrirModalEstadisticas(nombreJugador) {
+      abrirFicha(encodeURIComponent(nombreJugador));
     }
 
     async function abrirFicha(nombreCodificado) {
