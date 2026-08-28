@@ -23,7 +23,6 @@
     --danger:       #d1483f;
     --live:         #ff3b3b;
     --discord:      #5865f2;
-    --verificado:   #2be8ff;
     --up:           #57d68d;
     --down:         #ff5c5c;
     --font-display: 'Teko', 'Inter', sans-serif;
@@ -96,6 +95,31 @@
   .sidebar-item.proximamente { cursor: default; opacity: 0.65; }
   .sidebar-item.proximamente:hover { background: transparent; color: var(--cream-dim); }
   .sidebar-item.proximamente:hover .icono-nav { transform: none; }
+
+  .sidebar-divider { height: 1px; background: var(--card-line); margin: 10px 6px; flex-shrink: 0; }
+
+  .sidebar-bottom {
+    margin-top: auto; padding-top: 14px; border-top: 1px solid var(--card-line);
+    display: flex; align-items: center; gap: 10px; padding: 14px 8px 4px;
+    cursor: default;
+  }
+  .sidebar-bottom-avatar {
+    width: 34px; height: 34px; border-radius: 50%; background: var(--pitch-deep);
+    border: 1px solid var(--card-line); display: flex; align-items: center; justify-content: center;
+    color: var(--cream-dim); flex-shrink: 0;
+  }
+  .sidebar-bottom-avatar svg { width: 17px; height: 17px; }
+  .sidebar-bottom-info { display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+  .sidebar-bottom-nombre {
+    font-size: 12.5px; font-weight: 700; color: var(--cream);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .sidebar-bottom-sub {
+    font-size: 10.5px; color: var(--cream-dim); white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+  .sidebar.colapsado .sidebar-bottom-info { display: none; }
+  .sidebar.colapsado .sidebar-bottom { justify-content: center; }
   .badge-pronto {
     margin-left: auto; font-size: 8.5px; font-weight: 800; letter-spacing: 0.06em;
     background: rgba(155,63,224,0.18); color: var(--gold-bright);
@@ -174,27 +198,9 @@
   .discord-btn:hover { transform: translateY(-50%) scale(1.04); box-shadow: 0 10px 24px -8px rgba(88,101,242,0.75); }
   .discord-btn svg { width: 19px; height: 19px; flex-shrink: 0; }
 
-  .sesion-discord-control { position: absolute; right: 0; top: 6px; z-index: 2; }
-  .sesion-login-btn {
-    display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px;
-    background: rgba(88,101,242,0.1); border: 1px solid rgba(88,101,242,0.4); color: var(--cream-dim);
-    font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif;
-    transition: background 0.15s ease, color 0.15s ease;
-  }
-  .sesion-login-btn:hover { background: rgba(88,101,242,0.2); color: var(--cream); }
-  .sesion-chip {
-    display: inline-flex; align-items: center; gap: 8px; padding: 5px 6px 5px 12px; border-radius: 999px;
-    background: rgba(43,232,255,0.08); border: 1px solid rgba(43,232,255,0.3); font-size: 11px; color: var(--cream);
-  }
-  .sesion-chip button {
-    width: 18px; height: 18px; border-radius: 50%; border: none; background: rgba(255,255,255,0.08);
-    color: var(--cream-dim); font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center;
-  }
-  .sesion-chip button:hover { background: rgba(255,255,255,0.16); color: var(--cream); }
   @media (max-width: 720px) {
     .discord-btn { position: static; transform: none; margin-top: 12px; }
     .discord-btn:hover { transform: scale(1.04); }
-    .sesion-discord-control { position: static; margin-bottom: 10px; display: flex; justify-content: center; }
   }
 
   hr.rule { max-width: 1040px; margin: 0 auto; border: none; height: 1px; background: linear-gradient(90deg, transparent, var(--card-line) 20%, var(--card-line) 80%, transparent); }
@@ -643,55 +649,12 @@
   .grafico-vacio-contenido .reloj { font-size: 22px; opacity: 0.7; }
   .grafico-vacio-contenido .texto { font-size: 11.5px; color: var(--cream-dim); }
 
-  .podio-avatar.avatar-img, .tabla-avatar.avatar-img { object-fit: cover; }
-
-  .badge-verificado {
-    display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px;
-    border-radius: 50%; background: var(--verificado); color: #04211f; margin-left: 3px; flex-shrink: 0;
-    box-shadow: 0 0 6px rgba(43,232,255,0.6); vertical-align: middle;
-  }
-  .badge-verificado svg { width: 9px; height: 9px; }
-  .badge-verificado.grande { width: 18px; height: 18px; }
-  .badge-verificado.grande svg { width: 11px; height: 11px; }
-
-  .avatar-grande-wrap { position: relative; flex-shrink: 0; }
   .modal-head .nivel-circulo {
     width: 62px; height: 62px; border-radius: 50%; flex-shrink: 0; display: flex;
     align-items: center; justify-content: center; background: var(--pitch-deep);
     border: 2px solid var(--gold); font-family: var(--font-score); font-size: 24px; color: var(--gold-bright);
     object-fit: cover;
   }
-  .nivel-chip-mini {
-    position: absolute; bottom: -3px; right: -3px; min-width: 22px; height: 22px; padding: 0 4px;
-    border-radius: 999px; background: var(--pitch-deep); border: 2px solid rgba(20,12,32,0.9);
-    display: flex; align-items: center; justify-content: center; font-family: var(--font-score);
-    font-size: 11px; color: var(--gold-bright);
-  }
-
-  .tag-protegido {
-    display: inline-flex; align-items: center; gap: 4px; font-size: 9.5px; font-weight: 700;
-    letter-spacing: 0.05em; text-transform: uppercase; color: var(--verificado);
-    background: rgba(43,232,255,0.1); border: 1px solid rgba(43,232,255,0.35); border-radius: 999px;
-    padding: 2px 8px; margin-top: 6px;
-  }
-  .tag-protegido svg { width: 10px; height: 10px; }
-
-  .reclamar-banner {
-    margin-top: 18px; padding: 14px 16px; border-radius: 12px; background: rgba(88,101,242,0.08);
-    border: 1px dashed rgba(88,101,242,0.4); display: flex; flex-direction: column; gap: 10px; align-items: flex-start;
-  }
-  .reclamar-banner p { margin: 0; font-size: 12.5px; color: var(--cream-dim); line-height: 1.45; }
-  .reclamar-banner strong { color: var(--cream); }
-  .reclamar-comando {
-    font-family: var(--font-score); font-size: 12px; background: var(--pitch-deep); border: 1px solid var(--card-line);
-    border-radius: 6px; padding: 6px 10px; color: var(--gold-bright); letter-spacing: 0.02em;
-  }
-  .reclamar-btn {
-    display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 999px;
-    font-size: 12px; font-weight: 700; background: linear-gradient(135deg, var(--discord), #4752c4);
-    color: #fff; border: none; cursor: pointer; font-family: 'Inter', sans-serif; transition: filter 0.15s ease;
-  }
-  .reclamar-btn:hover { filter: brightness(1.1); }
 
   footer {
     max-width: 1040px; margin: 40px auto 0; display: flex; justify-content: space-between; align-items: center;
@@ -740,17 +703,26 @@
         <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4Z"/><path d="M7 5H4v2a3 3 0 0 0 3 3M17 5h3v2a3 3 0 0 1-3 3"/></svg>
         <span class="label-nav">Ranking</span>
       </a>
+      <div class="sidebar-divider"></div>
       <a class="sidebar-item proximamente" onclick="mostrarProximamente(event)">
         <svg class="icono-nav" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8" cy="10" r="1"/><circle cx="16" cy="14" r="1"/><path d="M14 8l-4 8"/></svg>
         <span class="label-nav">Casino</span><span class="badge-pronto">PRONTO</span>
       </a>
     </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-bottom-avatar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></svg>
+      </div>
+      <div class="sidebar-bottom-info">
+        <span class="sidebar-bottom-nombre">Invitado</span>
+        <span class="sidebar-bottom-sub">Perfil · Próximamente</span>
+      </div>
+    </div>
   </aside>
 
   <div class="main-content" id="mainContent">
 
   <header id="inicio">
-    <div class="sesion-discord-control" id="sesionDiscordControl"></div>
     <div class="crest-wrap"><img class="crest" src="axo.png" alt="Logo de la comunidad" /></div>
     <div class="brand">
       <span class="eyebrow">Comunidad Haxball</span>
@@ -891,94 +863,6 @@
       vallas: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.4l6.5 2.7v4.6c0 4.5-2.8 7.9-6.5 9.3-3.7-1.4-6.5-4.8-6.5-9.3V6.1L12 3.4Z"/></svg>`,
     };
     function iconoStat(clave) { return ICONOS_STAT[clave] || ""; }
-
-    // ===== Perfiles unificados: Verificado (Discord) vs. Sin reclamar =====
-    // NOTA IMPORTANTE: la API todavía no expone los campos `verificado` / `discordAvatarUrl`
-    // para cada jugador. Todo lo de acá abajo está preparado para consumirlos apenas el
-    // backend los agregue; hasta entonces, todos los jugadores se muestran como "sin verificar"
-    // (avatar con inicial, sin insignia), que es exactamente el comportamiento actual.
-    const SESION_DISCORD_KEY = "axoSesionDiscord";
-
-    function obtenerSesionDiscord() {
-      try { return JSON.parse(localStorage.getItem(SESION_DISCORD_KEY) || "null"); }
-      catch { return null; }
-    }
-
-    function iniciarSesionDiscord() {
-      // TODO backend: reemplazar este demo por el flujo real de OAuth de Discord,
-      // por ejemplo redirigiendo a `${API_URL}/auth/discord`.
-      const nombreDiscord = prompt("Modo demo — todavía no hay OAuth de Discord conectado.\nIngresá un usuario para simular el inicio de sesión:");
-      if (!nombreDiscord) return;
-      localStorage.setItem(SESION_DISCORD_KEY, JSON.stringify({ nombreDiscord: nombreDiscord.trim() }));
-      renderSesionHeader();
-      if (document.getElementById("modalOverlay").classList.contains("open")) {
-        const nombreAbierto = document.getElementById("modalCard")?.dataset.nombreActual;
-        if (nombreAbierto) abrirFicha(encodeURIComponent(nombreAbierto));
-      }
-    }
-
-    function cerrarSesionDiscord() {
-      localStorage.removeItem(SESION_DISCORD_KEY);
-      renderSesionHeader();
-    }
-
-    function renderSesionHeader() {
-      const cont = document.getElementById("sesionDiscordControl");
-      if (!cont) return;
-      const sesion = obtenerSesionDiscord();
-      cont.innerHTML = sesion
-        ? `<div class="sesion-chip"><span>🟢 ${escapeHtml(sesion.nombreDiscord)}</span><button type="button" onclick="cerrarSesionDiscord()" title="Cerrar sesión">✕</button></div>`
-        : `<button type="button" class="sesion-login-btn" onclick="iniciarSesionDiscord()">Conectar Discord</button>`;
-    }
-
-    function avatarHTML(j, claseBase) {
-      const inicial = escapeHtml((j.name || "?").trim().charAt(0).toUpperCase());
-      const tieneAvatarDiscord = !!(j.verificado && j.discordAvatarUrl);
-      if (!tieneAvatarDiscord) return `<div class="${claseBase}">${inicial}</div>`;
-      return `
-        <img src="${j.discordAvatarUrl}" alt="" class="${claseBase} avatar-img"
-             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-        <div class="${claseBase}" style="display:none">${inicial}</div>
-      `;
-    }
-
-    function insigniaVerificado(j, tamano) {
-      if (!j.verificado) return "";
-      return `<span class="badge-verificado ${tamano || ""}" title="Cuenta verificada con Discord">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>
-      </span>`;
-    }
-
-    function renderReclamarBanner(j) {
-      if (j.verificado) return "";
-      const codigo = `AXO-${j.id !== undefined && j.id !== null ? j.id : "????"}`;
-      const sesion = obtenerSesionDiscord();
-      if (!sesion) {
-        return `
-          <div class="reclamar-banner">
-            <p>¿Sos <strong>${escapeHtml(j.name)}</strong>? Conectá tu Discord para reclamar este perfil y proteger tu nick.</p>
-            <button type="button" class="reclamar-btn" onclick="iniciarSesionDiscord()">Conectar con Discord</button>
-          </div>
-        `;
-      }
-      return `
-        <div class="reclamar-banner">
-          <p>Conectado como <strong>${escapeHtml(sesion.nombreDiscord)}</strong>. Si este perfil es tuyo, vinculalo con el comando del host:</p>
-          <div class="reclamar-comando">/verificar ${codigo}</div>
-          <button type="button" class="reclamar-btn" onclick="copiarComandoVerificacion('${codigo}', this)">Vincular mi Discord a este perfil</button>
-        </div>
-      `;
-    }
-
-    function copiarComandoVerificacion(codigo, btn) {
-      const comando = `/verificar ${codigo}`;
-      if (navigator.clipboard) navigator.clipboard.writeText(comando).catch(() => {});
-      if (btn) {
-        const original = btn.textContent;
-        btn.textContent = "Comando copiado ✓ pegalo en el chat del host";
-        setTimeout(() => { btn.textContent = original; }, 2500);
-      }
-    }
 
     function actualizarTendencias(lista) {
       const nuevasPosiciones = {};
@@ -1195,8 +1079,8 @@
           return `
             <div class="podio-tarjeta" onclick="${clickHandler}">
               <span class="badge-puntero">👑 Puntero absoluto</span>
-              ${avatarHTML(j, "podio-avatar")}
-              <div class="nombre">${escapeHtml(j.name)}${insigniaVerificado(j)}${tendenciaHtml}</div>
+              <div class="podio-avatar">${escapeHtml((j.name || "?").trim().charAt(0).toUpperCase())}</div>
+              <div class="nombre">${escapeHtml(j.name)}${tendenciaHtml}</div>
               <div class="pts">${j.puntaje}<span class="pts-label">pts</span></div>
               ${mini}
             </div>
@@ -1206,9 +1090,9 @@
 
         return `
           <div class="podio-tarjeta lateral" onclick="${clickHandler}">
-            ${avatarHTML(j, "podio-avatar")}
+            <div class="podio-avatar">${escapeHtml((j.name || "?").trim().charAt(0).toUpperCase())}</div>
             <div class="podio-lateral-info">
-              <div class="nombre">${escapeHtml(j.name)}${insigniaVerificado(j)}${tendenciaHtml}</div>
+              <div class="nombre">${escapeHtml(j.name)}${tendenciaHtml}</div>
               ${mini}
             </div>
             <div class="pts">${j.puntaje}<span class="pts-label">pts</span></div>
@@ -1308,8 +1192,8 @@
           <tr class="${claseFila}" style="animation-delay:${Math.min(i * 0.025, 0.3)}s" onclick="abrirFicha('${encodeURIComponent(j.name)}')">
             <td><div class="pos-cell-inner"><span class="pos">${pos}</span>${tendenciaHtml}</div></td>
             <td><div class="nombre-cell">
-              ${avatarHTML(j, `tabla-avatar${claseFila ? " av-" + claseFila : ""}`)}
-              <a href="#" class="nombre-link" onclick="event.preventDefault(); abrirFicha('${encodeURIComponent(j.name)}')">${medalla}<strong>${escapeHtml(j.name)}</strong>${insigniaVerificado(j)}</a>
+              <div class="tabla-avatar${claseFila ? " av-" + claseFila : ""}">${escapeHtml((j.name || "?").trim().charAt(0).toUpperCase())}</div>
+              <a href="#" class="nombre-link" onclick="event.preventDefault(); abrirFicha('${encodeURIComponent(j.name)}')">${medalla}<strong>${escapeHtml(j.name)}</strong></a>
             </div></td>
             <td>${badgeInline(j.nivel, "tabla" + i)}</td>
             <td>${j.nivel}</td>
@@ -1490,15 +1374,11 @@
 
         contenido.innerHTML = `
           <div class="modal-head">
-            <div class="avatar-grande-wrap">
-              ${avatarHTML(j, "nivel-circulo")}
-              <span class="nivel-chip-mini">${j.nivel}</span>
-            </div>
+            <div class="nivel-circulo">${j.nivel}</div>
             <div class="modal-head-info">
               <p class="rango-line">${badgeInline(j.nivel, "modal")} ${escapeHtml(j.rango)}</p>
-              <h2 title="${escapeHtml(j.name)}">${escapeHtml(j.name)}${insigniaVerificado(j, "grande")}</h2>
+              <h2 title="${escapeHtml(j.name)}">${escapeHtml(j.name)}</h2>
               ${j.id !== undefined && j.id !== null ? `<p class="jugador-id">ID #${j.id}</p>` : ""}
-              ${j.verificado ? `<span class="tag-protegido"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6l7-3Z"/></svg>Nick protegido</span>` : ""}
             </div>
           </div>
 
@@ -1554,8 +1434,6 @@
             <h4>Partidos recientes</h4>
             ${renderHistorialPartidos(info.partidosJugador, Math.max(info.partidosDetectados, info.partidosJugador.length))}
           </div>
-
-          ${renderReclamarBanner(j)}
         `;
 
         historialGraficoActual = historial || [];
@@ -1743,7 +1621,6 @@
     cargarDatos();
     cargarPartidos();
     cargarEstadoVivo();
-    renderSesionHeader();
     setInterval(() => cargarDatos(), 30000);
     setInterval(cargarEstadoVivo, 15000);
     setInterval(cargarPartidos, 60000);
