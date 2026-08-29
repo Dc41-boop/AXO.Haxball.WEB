@@ -205,7 +205,7 @@
 
   hr.rule { max-width: 1040px; margin: 0 auto; border: none; height: 1px; background: linear-gradient(90deg, transparent, var(--card-line) 20%, var(--card-line) 80%, transparent); }
 
-  .live-bar { max-width: 1040px; margin: 18px auto 0; display: flex; align-items: center; justify-content: center; }
+  .live-bar { max-width: 1040px; margin: 18px auto 0; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
   .live-pastilla {
     display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px 6px 10px;
     border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: 0.02em;
@@ -221,6 +221,12 @@
   .live-pastilla.online .estado-label { color: var(--up); }
   .live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--up); box-shadow: 0 0 0 0 rgba(87,214,141,0.6); animation: pulseGreen 2s infinite; }
   .live-dot.off { background: var(--cream-dim); animation: none; opacity: 0.55; }
+  .temporada-pastilla {
+    display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 999px;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.02em;
+    background: rgba(240,196,90,0.1); border: 1px solid rgba(240,196,90,0.35); color: var(--gold-bright);
+  }
+  .temporada-pastilla .icono-trofeo { font-size: 13px; }
   @keyframes pulseGreen { 0% { box-shadow: 0 0 0 0 rgba(87,214,141,0.5); } 70% { box-shadow: 0 0 0 7px rgba(87,214,141,0); } 100% { box-shadow: 0 0 0 0 rgba(87,214,141,0); } }
 
   .scoreboard-wrap { max-width: 1040px; margin: 30px auto 0; }
@@ -745,6 +751,10 @@
       <span class="estado-label" id="liveEstadoLabel">…</span>
       <span id="liveTexto">Consultando estado del host…</span>
     </span>
+    <span class="temporada-pastilla" id="temporadaPastilla" style="display:none;">
+      <span class="icono-trofeo">🏆</span>
+      <span id="temporadaTexto">—</span>
+    </span>
   </div>
 
   <div id="vista-inicio" class="vista vista-activa">
@@ -780,7 +790,7 @@
           <option value="all">Histórico</option>
           <option value="week">Esta semana</option>
           <option value="month">Este mes</option>
-          <option value="season">Temporada actual</option>
+          <option value="season">Último mes</option>
         </select>
         <input type="text" id="buscador" placeholder="Buscar jugador…" />
         <select id="orden">
@@ -964,6 +974,8 @@
       const label = document.getElementById("liveEstadoLabel");
       const scoreboardWrap = document.getElementById("scoreboardWrap");
       const liderWrap = document.getElementById("liderWrap");
+      const temporadaPastilla = document.getElementById("temporadaPastilla");
+      const temporadaTexto = document.getElementById("temporadaTexto");
       try {
         const res = await fetch(`${API_URL}/api/status`);
         const estado = await res.json();
@@ -978,6 +990,20 @@
           pastilla.classList.remove("online");
           label.textContent = "Offline";
           texto.textContent = "· el host está vacío en este momento";
+        }
+
+        if (typeof estado.diasRestantesTemporada === "number") {
+          const dias = estado.diasRestantesTemporada;
+          temporadaPastilla.style.display = "inline-flex";
+          if (dias <= 0) {
+            temporadaTexto.textContent = "La temporada termina hoy";
+          } else if (dias === 1) {
+            temporadaTexto.textContent = "Queda 1 día de temporada";
+          } else {
+            temporadaTexto.textContent = `Quedan ${dias} días de temporada`;
+          }
+        } else {
+          temporadaPastilla.style.display = "none";
         }
 
         if (estado.enPartido && estado.cantidad > 0 && estado.scoreRed !== null) {
