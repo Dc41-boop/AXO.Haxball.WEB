@@ -1025,6 +1025,32 @@
       }
     }
 
+    // Contador de temporada: NO depende del estado en vivo del bot, es una
+    // consulta normal a la API (que a su vez lee de Mongo). Por eso alcanza
+    // con pedirlo cada tanto (cada 5 minutos), no hace falta tiempo real.
+    async function cargarTemporada() {
+      const temporadaPastilla = document.getElementById("temporadaPastilla");
+      const temporadaTexto = document.getElementById("temporadaTexto");
+      if (!temporadaPastilla || !temporadaTexto) return;
+      try {
+        const res = await fetch(`${API_URL}/api/temporada`);
+        if (!res.ok) throw new Error("no ok");
+        const data = await res.json();
+        const dias = data.diasRestantes;
+
+        temporadaPastilla.style.display = "inline-flex";
+        if (dias <= 0) {
+          temporadaTexto.textContent = "La temporada termina hoy";
+        } else if (dias === 1) {
+          temporadaTexto.textContent = "Queda 1 día de temporada";
+        } else {
+          temporadaTexto.textContent = `Quedan ${dias} días de temporada`;
+        }
+      } catch (err) {
+        temporadaPastilla.style.display = "none";
+      }
+    }
+
     async function cargarEstadoVivo() {
       const dot = document.getElementById("liveDot");
       const texto = document.getElementById("liveTexto");
@@ -1032,8 +1058,6 @@
       const label = document.getElementById("liveEstadoLabel");
       const scoreboardWrap = document.getElementById("scoreboardWrap");
       const liderWrap = document.getElementById("liderWrap");
-      const temporadaPastilla = document.getElementById("temporadaPastilla");
-      const temporadaTexto = document.getElementById("temporadaTexto");
       try {
         const res = await fetch(`${API_URL}/api/status`);
         const estado = await res.json();
@@ -1048,20 +1072,6 @@
           pastilla.classList.remove("online");
           label.textContent = "Offline";
           texto.textContent = "· el host está vacío en este momento";
-        }
-
-        if (typeof estado.diasRestantesTemporada === "number") {
-          const dias = estado.diasRestantesTemporada;
-          temporadaPastilla.style.display = "inline-flex";
-          if (dias <= 0) {
-            temporadaTexto.textContent = "La temporada termina hoy";
-          } else if (dias === 1) {
-            temporadaTexto.textContent = "Queda 1 día de temporada";
-          } else {
-            temporadaTexto.textContent = `Quedan ${dias} días de temporada`;
-          }
-        } else {
-          temporadaPastilla.style.display = "none";
         }
 
         if (estado.enPartido && estado.cantidad > 0 && estado.scoreRed !== null) {
@@ -1706,10 +1716,12 @@
     cargarPartidos();
     cargarEstadoVivo();
     cargarMejoresDT();
+    cargarTemporada();
     setInterval(() => cargarDatos(), 30000);
     setInterval(cargarEstadoVivo, 15000);
     setInterval(cargarPartidos, 60000);
     setInterval(cargarMejoresDT, 60000);
+    setInterval(cargarTemporada, 5 * 60000);
 
     // ===== Sidebar =====
     function irAVista(evento, nombreVista, elemento) {
